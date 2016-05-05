@@ -1,0 +1,17 @@
+﻿<Window x:Class="YandereSimLauncher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:YandereSimLauncher"
+        mc:Ignorable="d"
+        Title="Yandere Simulator Launcher" Height="505" Width="850" WindowStyle="None" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" MouseDown="WindowMouseDown">
+    <Grid Background="White">
+        <Grid Height="45" VerticalAlignment="Top" Background="#FFFFBDF5"/>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="375" Margin="5,50,0,0" VerticalAlignment="Top" Width="560" Source="http://67.media.tumblr.com/a6e838511001da0cab10885e7fb53cc5/tumblr_o51yukmr371sdqpmho1_1280.png" Stretch="UniformToFill"/>
+        <Image x:Name="image1" HorizontalAlignment="Right" Height="90" Margin="0,55,5,0" VerticalAlignment="Top" Width="275" Source="Assets/mylogo.png"/>
+        <ProgressBar x:Name="ProgressBar" HorizontalAlignment="Left" Height="40" Margin="35,445,0,0" VerticalAlignment="Top" Width="635" Value="20" Foreground="#FFFF7DCD" BorderBrush="#FFFF7DCD" Background="White" BorderThickness="2"/>
+        <StackPanel HorizontalAlignment="Left" Height="375" Margin="320,50,0,0" VerticalAlignment="Top" Width="245" Background="#CCFFFFFF"/>
+
+    </Grid>
+</Window>
