@@ -5,13 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:YandereSimLauncher"
         mc:Ignorable="d"
-        Title="Yandere Simulator Launcher" Height="505" Width="850" WindowStyle="None" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" MouseDown="WindowMouseDown">
+        Title="Yandere Simulator Launcher" Height="505" Width="850" WindowStyle="None" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" MouseDown="WindowMouseDown" Loaded="OnWindowLoaded">
     <Grid Background="White">
-        <Grid Height="45" VerticalAlignment="Top" Background="#FFFFBDF5"/>
-        <Image x:Name="image" HorizontalAlignment="Left" Height="375" Margin="5,50,0,0" VerticalAlignment="Top" Width="560" Source="http://67.media.tumblr.com/a6e838511001da0cab10885e7fb53cc5/tumblr_o51yukmr371sdqpmho1_1280.png" Stretch="UniformToFill"/>
+        <Grid Height="45" VerticalAlignment="Top" Background="#FFFFBDF5">
+            <Image x:Name="CloseButton" HorizontalAlignment="Left" Height="35" Margin="810,5,0,0" VerticalAlignment="Top" Width="35" Source="Assets/cross-24-512.png" MouseUp="OnCloseClick"/>
+            <Image x:Name="CloseButton_Copy" HorizontalAlignment="Left" Height="35" Margin="765,5,0,0" VerticalAlignment="Top" Width="35" Source="Assets/minimize-480.png" MouseUp="OnMinimizeClick"/>
+        </Grid>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="375" Margin="5,50,0,0" VerticalAlignment="Top" Width="560" Source="http://orig02.deviantart.net/b94c/f/2016/045/6/2/yan_by_tri_bby-d9rqkg1.jpg" Stretch="UniformToFill"/>
         <Image x:Name="image1" HorizontalAlignment="Right" Height="90" Margin="0,55,5,0" VerticalAlignment="Top" Width="275" Source="Assets/mylogo.png"/>
-        <ProgressBar x:Name="ProgressBar" HorizontalAlignment="Left" Height="40" Margin="35,445,0,0" VerticalAlignment="Top" Width="635" Value="20" Foreground="#FFFF7DCD" BorderBrush="#FFFF7DCD" Background="White" BorderThickness="2"/>
-        <StackPanel HorizontalAlignment="Left" Height="375" Margin="320,50,0,0" VerticalAlignment="Top" Width="245" Background="#CCFFFFFF"/>
-
+        <ProgressBar x:Name="ProgressBar" HorizontalAlignment="Left" Height="40" Margin="35,445,0,0" VerticalAlignment="Top" Width="530" Value="20" Foreground="#FFFF7DCD" BorderBrush="#FFFF7DCD" Background="White" BorderThickness="2"/>
+        <StackPanel HorizontalAlignment="Left" Height="230" Margin="570,195,0,0" VerticalAlignment="Top" Width="275"/>
+        <StackPanel HorizontalAlignment="Left" Height="25" Margin="640,142,0,0" VerticalAlignment="Top" Width="145" Orientation="Horizontal">
+            <Image x:Name="Social_wordpress" Height="25" Margin="0,0,5,0" Source="Assets/wordpress-logo_318-33553.png" Opacity="0.8"/>
+            <Image x:Name="Social_youtube" Height="25" Margin="0,0,5,-0.2" Source="Assets/YouTube-icon-dark.png" Width="28" Opacity="0.8"/>
+            <Image x:Name="Social_twitter" Height="25" Margin="0,0,5,-0.2" Source="Assets/03-twitter-512.png" Opacity="0.8"/>
+            <Image x:Name="Social_patreon" Height="25" Margin="0,0,5,-0.2" Source="Assets/patreon_logo_black.png" Opacity="0.8"/>
+            <Image x:Name="Social_tumblr" Height="25" Margin="0,0,5,-0.2" Source="Assets/tumblr.png" Opacity="0.8"/>
+        </StackPanel>
+        <Image x:Name="image2" HorizontalAlignment="Left" Height="65" Margin="5,430,0,0" VerticalAlignment="Top" Width="65" Source="Assets/heart.png"/>
+        <TextBlock x:Name="textBlock" Margin="570,170,2.6,0" TextWrapping="Wrap" Text="- L  A  T  E  S  T    B  L  O  G    P  O  S  T  S -" VerticalAlignment="Top" Height="20" FontSize="14.667" Foreground="#FF3E3E42" TextAlignment="Center"/>
+        <Rectangle Fill="#B2000000" HorizontalAlignment="Left" Height="50" Margin="5,375,0,0" VerticalAlignment="Top" Width="560"/>
+        <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="10,385,0,0" TextWrapping="Wrap" Text="Expelling Your Rivals In Yandere Simulator" VerticalAlignment="Top" Height="40" Width="555" FontSize="26.667" FontFamily="Segoe UI Semibold" Foreground="#FFFF7DCD"/>
+        <TextBlock x:Name="textBlock1_Copy" HorizontalAlignment="Left" Margin="10,375,0,0" TextWrapping="Wrap" Text="22 Apr 2016" VerticalAlignment="Top" Height="15" Width="110" FontFamily="Segoe UI Semibold" Foreground="White"/>
+        <Button x:Name="PlayButton" Content="PLAY" HorizontalAlignment="Left" Height="40" Margin="700,445,0,0" VerticalAlignment="Top" Width="145"/>
+        <TextBlock x:Name="DownloadStatus" HorizontalAlignment="Left" Margin="75,450,0,0" TextWrapping="Wrap" Text="Downloading 200 of 456mb" VerticalAlignment="Top" Height="25" Width="490" Foreground="#FF2D2D30" FontSize="18.667"/>
+        <Button x:Name="button_Copy" Content="Force re-download" HorizontalAlignment="Left" Height="40" Margin="570,445,0,0" VerticalAlignment="Top" Width="125"/>
     </Grid>
 </Window>
