@@ -150,12 +150,12 @@ namespace YandereSimLauncher {
 
         private void OnTextLeave(object sender, MouseEventArgs e) {
             var block = (TextBlock)sender;
-            block.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 125, 205));
+            block.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
         }
 
         private void OnTextEnter(object sender, MouseEventArgs e) {
             var text = (TextBlock)sender;
-            text.Foreground = new SolidColorBrush(Color.FromArgb(255, 62, 62, 62));
+            text.Foreground = new SolidColorBrush(Color.FromArgb(255, 127, 13, 100));
         }
 
         private void OnPostTitleClick(object sender, MouseButtonEventArgs e) {
@@ -169,7 +169,9 @@ namespace YandereSimLauncher {
             try {
                 var block = (TextBlock)sender;
                 var parts = block.Name.Split('_');
-                if (parts.Length == 2) {
+                if(block.Name == "headText_Blog") {
+                    Process.Start(SocialLinks["wordpress"]);
+                } else if (parts.Length == 2) {
                     Process.Start(BLOG_LINK + parts[1]);
                 } else Process.Start(BLOG_LINK + parts[1] + "-" + parts[2]);
             } catch (ArgumentOutOfRangeException) { }

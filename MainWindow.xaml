@@ -5,34 +5,79 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:YandereSimLauncher"
         mc:Ignorable="d"
-        Title="Yandere Simulator Launcher" Height="510" Width="430" WindowStyle="None" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" MouseDown="WindowMouseDown" Loaded="OnWindowLoaded">
-    <Grid Background="White">
-        <Grid Height="45" VerticalAlignment="Top" Background="#FFFFA3DB" HorizontalAlignment="Left" Width="430">
-            <Image x:Name="CloseButton" HorizontalAlignment="Left" Height="35" Margin="385,5,0,0" VerticalAlignment="Top" Width="35" Source="Assets/cross-24-512.png" MouseDown="OnCloseClick" MouseEnter="OnButtonHover" MouseLeave="OnButtonLeave"/>
-            <Image x:Name="CloseButton_Copy" HorizontalAlignment="Left" Height="35" Margin="335,5,0,0" VerticalAlignment="Top" Width="35" Source="Assets/minimize-480.png" MouseEnter="OnButtonHover" MouseLeave="OnButtonLeave" MouseDown="OnMinimizeClick"/>
+        Title="Yandere Simulator Launcher" Height="510" Width="754.9" WindowStyle="None" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" MouseDown="WindowMouseDown" Loaded="OnWindowLoaded">
+    <Grid Background="#FFFB89E0">
+        <Grid Height="45" VerticalAlignment="Top" Background="#FFFFA2E9" Margin="0,0,0.2,0">
+            <Grid.Effect>
+                <DropShadowEffect Color="#FFF184D7" BlurRadius="20"/>
+            </Grid.Effect>
+            <Image x:Name="CloseButton" HorizontalAlignment="Right" Height="35" Margin="0,5,10,0" VerticalAlignment="Top" Width="35" Source="Assets/cross-24-512.png" MouseDown="OnCloseClick" MouseEnter="OnButtonHover" MouseLeave="OnButtonLeave"/>
+            <Image x:Name="CloseButton_Copy" HorizontalAlignment="Right" Height="35" Margin="0,5,60,0" VerticalAlignment="Top" Width="35" Source="Assets/minimize-480.png" MouseEnter="OnButtonHover" MouseLeave="OnButtonLeave" MouseDown="OnMinimizeClick"/>
 
         </Grid>
-        <Image x:Name="image1" HorizontalAlignment="Center" Height="90" Margin="0,55,0,0" VerticalAlignment="Top" Width="275" Source="Assets/mylogo.png"/>
-        <ProgressBar x:Name="ProgressBar" HorizontalAlignment="Center" Height="40" Margin="50,446,52.4,0" VerticalAlignment="Top" Width="328" Foreground="#FFFF7DCD" BorderBrush="#FFFF7DCD" Background="White" BorderThickness="2" LargeChange="0.1"/>
-        <StackPanel HorizontalAlignment="Center" Height="35" Margin="0,182,0,0" VerticalAlignment="Top" Width="170" Orientation="Horizontal">
-            <Image x:Name="Social_wordpress" Height="25" Margin="10,0,5,0" Source="Assets/wordpress-logo_318-33553.png" Opacity="0.8" MouseLeave="OnButtonLeave" MouseEnter="OnButtonHover" Cursor="Hand" MouseDown="OnSocialButtonClick"/>
-            <Image x:Name="Social_youtube" Height="25" Margin="0,0,5,-0.2" Source="Assets/YouTube-icon-dark.png" Width="28" Opacity="0.8" MouseLeave="OnButtonLeave" MouseEnter="OnButtonHover" Cursor="Hand" MouseDown="OnSocialButtonClick"/>
-            <Image x:Name="Social_twitter" Height="25" Margin="0,0,5,-0.2" Source="Assets/03-twitter-512.png" Opacity="0.8" MouseLeave="OnButtonLeave" MouseEnter="OnButtonHover" Cursor="Hand" MouseDown="OnSocialButtonClick"/>
-            <Image x:Name="Social_patreon" Height="25" Margin="0,0,5,-0.2" Source="Assets/patreon_logo_black.png" Opacity="0.8" MouseLeave="OnButtonLeave" MouseEnter="OnButtonHover" Cursor="Hand" MouseDown="OnSocialButtonClick"/>
-            <Image x:Name="Social_tumblr" Height="25" Margin="0,0,5,-0.2" Source="Assets/tumblr.png" Opacity="0.8" MouseLeave="OnButtonLeave" MouseEnter="OnButtonHover" Cursor="Hand" MouseDown="OnSocialButtonClick"/>
+        <Image x:Name="image1" HorizontalAlignment="Center" Height="165" Margin="120,120,115.2,0" VerticalAlignment="Top" Width="520" Source="Assets/mylogo.png">
+            <Image.Effect>
+                <DropShadowEffect Color="#FFFF7DCD" Direction="283" BlurRadius="29" Opacity="0.6" ShadowDepth="0"/>
+            </Image.Effect>
+        </Image>
+        <ProgressBar x:Name="ProgressBar" Height="40" Margin="50,446,50,0" VerticalAlignment="Top" Width="328" Foreground="#FFFFBDF5" BorderBrush="{x:Null}" Background="White" BorderThickness="2" LargeChange="0.1">
+            <ProgressBar.Effect>
+                <DropShadowEffect Direction="280" ShadowDepth="0" BlurRadius="25" Color="#FF85156A" Opacity="0.73"/>
+            </ProgressBar.Effect>
+        </ProgressBar>
+        <StackPanel HorizontalAlignment="Center" Height="55" Margin="307,60,305.2,0" VerticalAlignment="Top" Width="143" Orientation="Horizontal">
+            <Image x:Name="Social_youtube" Height="40" Margin="0,0,5,-0.2" Source="Assets/YouTube-icon-dark.png" Width="45" MouseLeave="OnButtonLeave" MouseEnter="OnButtonHover" Cursor="Hand" MouseDown="OnSocialButtonClick"/>
+            <Image x:Name="Social_twitter" Height="40" Margin="0,0,5,-0.2" Source="Assets/03-twitter-512.png" MouseLeave="OnButtonLeave" MouseEnter="OnButtonHover" Cursor="Hand" MouseDown="OnSocialButtonClick"/>
+            <Image x:Name="Social_patreon" Height="40" Margin="0,0,5,-0.2" Source="Assets/patreon_logo_black.png" MouseLeave="OnButtonLeave" MouseEnter="OnButtonHover" Cursor="Hand" MouseDown="OnSocialButtonClick"/>
         </StackPanel>
-        <Image x:Name="image2" HorizontalAlignment="Left" Height="65" Margin="10,435,0,0" VerticalAlignment="Top" Width="65" Source="Assets/heart.png" MouseEnter="OnButtonHover" MouseLeave="OnButtonLeave" RenderTransformOrigin="0.5,0.5"/>
-        <TextBlock x:Name="textBlock1_Copy" HorizontalAlignment="Left" Margin="10,375,0,0" TextWrapping="Wrap" Text="22 Apr 2016" VerticalAlignment="Top" Height="15" Width="110" FontFamily="Segoe UI Semibold" Foreground="White"/>
-        <Button x:Name="PlayButton" Content="PLAY" HorizontalAlignment="Center" Height="40" Margin="145,363,140.4,0" VerticalAlignment="Top" Width="145" BorderBrush="#FFFF7DCD" Background="#FFFFBDF5" FontSize="18.667" FontFamily="Segoe UI Semibold" Cursor="Hand" Foreground="#FF353435" BorderThickness="2" Click="OnPlayButtonClick" ToolTip="Play Yandere Simulator"/>
-        <TextBlock x:Name="DownloadStatus" HorizontalAlignment="Left" Margin="52,454,0,0" TextWrapping="Wrap" Text="Downloading 200 of 456mb" VerticalAlignment="Top" Height="27" Width="326" Foreground="#FF2D2D30" FontSize="17.333" TextAlignment="Center"/>
-        <StackPanel HorizontalAlignment="Center" Height="145" Margin="0,220,0,0" VerticalAlignment="Top" Width="275">
-            <TextBlock x:Name="headText_Volunteer" TextWrapping="Wrap" Text="VOLUNTEER" VerticalAlignment="Top" Height="35" Width="135" Foreground="#FFFF7DCD" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand"/>
-            <TextBlock x:Name="headText_FAQ" TextWrapping="Wrap" Text="FAQ" VerticalAlignment="Top" Height="35" Width="50" Foreground="#FFFF7DCD" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand"/>
-            <TextBlock x:Name="headText_Report" TextWrapping="Wrap" Text="REPORT BUGS" VerticalAlignment="Top" Height="35" Foreground="#FFFF7DCD" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand" Margin="55,0"/>
-            <TextBlock x:Name="headText_Donate" TextWrapping="Wrap" Text="DONATE" VerticalAlignment="Top" Height="35" Width="95" Foreground="#FFFF7DCD" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand"/>
+        <Image x:Name="image2" HorizontalAlignment="Left" Height="65" Margin="180,435,0,0" VerticalAlignment="Top" Width="65" Source="Assets/heart.png" MouseEnter="OnButtonHover" MouseLeave="OnButtonLeave" RenderTransformOrigin="0.5,0.5"/>
+        <Button x:Name="PlayButton" Content="PLAY" HorizontalAlignment="Center" Height="40" Margin="307,347,303.2,0" VerticalAlignment="Top" Width="145" BorderBrush="{x:Null}" Background="#FFFFBDF5" FontSize="18.667" FontFamily="Segoe UI Semibold" Cursor="Hand" Foreground="#FF7F0D64" BorderThickness="2" Click="OnPlayButtonClick" ToolTip="Play Yandere Simulator">
+            <Button.Effect>
+                <DropShadowEffect Direction="272" BlurRadius="27" Color="#FFE058B9" Opacity="0.715" ShadowDepth="3"/>
+            </Button.Effect>
+        </Button>
+        <TextBlock x:Name="DownloadStatus" HorizontalAlignment="Center" Margin="50,453,52.4,0" TextWrapping="Wrap" Text="Downloading 200 of 456mb" VerticalAlignment="Top" Height="27" Width="328" Foreground="#FF85156A" FontSize="17.333" TextAlignment="Center"/>
+        <StackPanel HorizontalAlignment="Center" Height="35" Margin="10,5,115.2,0" VerticalAlignment="Top" Width="630" Orientation="Horizontal">
+            <TextBlock x:Name="headText_Volunteer" TextWrapping="Wrap" Text="VOLUNTEER" VerticalAlignment="Top" Height="35" Width="135" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
+                <TextBlock.Effect>
+                    <DropShadowEffect ShadowDepth="0" Color="White"/>
+                </TextBlock.Effect>
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap" Text="•" VerticalAlignment="Top" Height="35" Width="10" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" Margin="5,0"/>
+            <TextBlock x:Name="headText_FAQ" TextWrapping="Wrap" Text="FAQ" VerticalAlignment="Top" Height="35" Width="50" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
+                <TextBlock.Effect>
+                    <DropShadowEffect ShadowDepth="0" Color="White"/>
+                </TextBlock.Effect>
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap" Text="•" VerticalAlignment="Top" Height="35" Width="10" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" Margin="5,0"/>
+            <TextBlock x:Name="headText_Report" TextWrapping="Wrap" Text="REPORT BUGS" VerticalAlignment="Top" Height="35" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand" Margin="0">
+                <TextBlock.Effect>
+                    <DropShadowEffect ShadowDepth="0" Color="White"/>
+                </TextBlock.Effect>
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap" Text="•" VerticalAlignment="Top" Height="35" Width="10" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" Margin="5,0"/>
+            <TextBlock x:Name="headText_Donate" TextWrapping="Wrap" Text="DONATE" VerticalAlignment="Top" Height="35" Width="95" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
+                <TextBlock.Effect>
+                    <DropShadowEffect ShadowDepth="0" Color="White"/>
+                </TextBlock.Effect>
+            </TextBlock>
+            <TextBlock TextWrapping="Wrap" Text="•" VerticalAlignment="Top" Height="35" Width="10" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" Margin="5,0"/>
+            <TextBlock x:Name="headText_Blog" TextWrapping="Wrap" Text="BLOG" VerticalAlignment="Top" Height="35" Width="65" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
+                <TextBlock.Effect>
+                    <DropShadowEffect ShadowDepth="0" Color="White"/>
+                </TextBlock.Effect>
+            </TextBlock>
         </StackPanel>
-        <Image x:Name="image2_Copy" HorizontalAlignment="Left" Height="65" Margin="355,435,0,0" VerticalAlignment="Top" Width="65" Source="Assets/heart.1png.png" MouseEnter="OnButtonHover" MouseLeave="OnButtonLeave" RenderTransformOrigin="0.5,0.5"/>
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Center" Margin="0,150,0,0" TextWrapping="Wrap" Text="- G A M E   L A U N C H E R -" VerticalAlignment="Top" Height="32" Width="264" FontSize="18.667" TextAlignment="Center" FontFamily="Segoe UI Semibold" Foreground="#FF3E3E3E"/>
-        <Button x:Name="RedownloadButton" Content="Force re-download" HorizontalAlignment="Center" Height="26" Margin="130,412,125.4,0" VerticalAlignment="Top" Width="175" BorderBrush="#FFFF7DCD" Background="#FFFFBDF5" FontSize="13.333" FontFamily="Segoe UI Semibold" Cursor="Hand" Foreground="#FF353435" BorderThickness="2" Click="OnRedownloadClick" ToolTip="Download the whole game again in case you're having problems with current version"/>
+        <Image x:Name="image2_Copy" HorizontalAlignment="Right" Height="65" Margin="0,435,185.2,0" VerticalAlignment="Top" Width="65" Source="Assets/heart.1png.png" MouseEnter="OnButtonHover" MouseLeave="OnButtonLeave" RenderTransformOrigin="0.5,0.5"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Center" Margin="250,295,241.2,0" TextWrapping="Wrap" Text="- G A M E   L A U N C H E R -" VerticalAlignment="Top" Height="32" Width="264" FontSize="18.667" TextAlignment="Center" FontFamily="Segoe UI Semibold" Foreground="White">
+            <TextBlock.Effect>
+                <DropShadowEffect ShadowDepth="0" Color="White"/>
+            </TextBlock.Effect>
+        </TextBlock>
+        <Button x:Name="RedownloadButton" Content="Force re-download" HorizontalAlignment="Center" Height="26" Margin="295,399,285.2,0" VerticalAlignment="Top" Width="175" BorderBrush="{x:Null}" Background="#FFFFBDF5" FontSize="13.333" FontFamily="Segoe UI Semibold" Cursor="Hand" Foreground="#FF7F0D64" BorderThickness="2" Click="OnRedownloadClick" ToolTip="Download the whole game again in case you're having problems with current version">
+            <Button.Effect>
+                <DropShadowEffect Direction="280.5" Color="#FFE058B9" BlurRadius="15" Opacity="0.6" ShadowDepth="3"/>
+            </Button.Effect>
+        </Button>
     </Grid>
 </Window>
