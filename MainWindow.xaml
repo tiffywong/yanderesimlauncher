@@ -38,30 +38,32 @@
         </Button>
         <TextBlock x:Name="DownloadStatus" HorizontalAlignment="Center" Margin="50,453,52.4,0" TextWrapping="Wrap" Text="Downloading 200 of 456mb" VerticalAlignment="Top" Height="27" Width="328" Foreground="#FF85156A" FontSize="17.333" TextAlignment="Center"/>
         <StackPanel HorizontalAlignment="Center" Height="35" Margin="10,5,115.2,0" VerticalAlignment="Top" Width="630" Orientation="Horizontal">
-            <TextBlock x:Name="headText_Volunteer" TextWrapping="Wrap" Text="VOLUNTEER" VerticalAlignment="Top" Height="35" Width="135" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
+            <TextBlock x:Name="headText_volunteer" TextWrapping="Wrap" Text="VOLUNTEER" VerticalAlignment="Top" Height="35" Width="135" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
                 <TextBlock.Effect>
                     <DropShadowEffect ShadowDepth="0" Color="White"/>
                 </TextBlock.Effect>
             </TextBlock>
             <TextBlock TextWrapping="Wrap" Text="•" VerticalAlignment="Top" Height="35" Width="10" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" Margin="5,0"/>
-            <TextBlock x:Name="headText_FAQ" TextWrapping="Wrap" Text="ABOUT" VerticalAlignment="Top" Height="35" Width="80" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
+            <TextBlock x:Name="headText_contact" TextWrapping="Wrap" Text="CONTACT" VerticalAlignment="Top" Height="35" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand" Margin="0">
                 <TextBlock.Effect>
                     <DropShadowEffect ShadowDepth="0" Color="White"/>
                 </TextBlock.Effect>
             </TextBlock>
             <TextBlock TextWrapping="Wrap" Text="•" VerticalAlignment="Top" Height="35" Width="10" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" Margin="5,0"/>
-            <TextBlock x:Name="headText_Report" TextWrapping="Wrap" Text="CONTACT" VerticalAlignment="Top" Height="35" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand" Margin="0">
-                <TextBlock.Effect>
-                    <DropShadowEffect ShadowDepth="0" Color="White"/>
-                </TextBlock.Effect>
-            </TextBlock>
-            <TextBlock TextWrapping="Wrap" Text="•" VerticalAlignment="Top" Height="35" Width="10" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" Margin="5,0"/>
-            <TextBlock x:Name="headText_Donate" TextWrapping="Wrap" Text="DONATE" VerticalAlignment="Top" Height="35" Width="115" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
+            <TextBlock x:Name="headText_donate" TextWrapping="Wrap" Text="DONATE" VerticalAlignment="Top" Height="35" Width="115" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
                 <TextBlock.Effect>
                     <DropShadowEffect ShadowDepth="0" Color="White"/>
                 </TextBlock.Effect>
             </TextBlock>
             <TextBlock TextWrapping="Wrap" Text="•" VerticalAlignment="Top" Height="35" Width="10" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" Margin="-12,0,5,0"/>
+            <TextBlock x:Name="headText_about" TextWrapping="Wrap" Text="ABOUT" VerticalAlignment="Top" Height="35" Width="80" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
+                <TextBlock.Effect>
+                    <DropShadowEffect ShadowDepth="0" Color="White"/>
+                </TextBlock.Effect>
+            </TextBlock>
+            
+            
+            <TextBlock TextWrapping="Wrap" Text="•" VerticalAlignment="Top" Height="35" Width="10" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" Margin="5,0"/>
             <TextBlock x:Name="headText_Blog" TextWrapping="Wrap" Text="BLOG" VerticalAlignment="Top" Height="35" Width="65" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
                 <TextBlock.Effect>
                     <DropShadowEffect ShadowDepth="0" Color="White"/>

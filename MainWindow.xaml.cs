@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -37,6 +36,8 @@ namespace YandereSimLauncher {
         private WebClient webClient;
         private string gamePath;
         private int newGameVersion;
+        private Thread launcherThread;
+        private bool isAppClosed;
 
         //private List<Post> posts;
 
@@ -44,15 +45,19 @@ namespace YandereSimLauncher {
             InitializeComponent();
             webClient = new WebClient();
             gamePath = AppDomain.CurrentDomain.BaseDirectory;
-            /*AppDomain.CurrentDomain.UnhandledException += (s, e) => {
-                MessageBox.Show("If you see this window second time, please report a bug on 'http://yanderesimulator.com/Report.html' and attach 'launcherCrashDump.txt that is next to this executable''", "Fatal error");
+
+            //Uncomment this for release version
+            AppDomain.CurrentDomain.UnhandledException += (s, e) => {
+                var box = MessageBox.Show("If you see this window second time, please report a bug on 'http://yanderesimulator.com/contact.html' and attach 'launcherCrashDump.txt that is next to this executable''", "Fatal error");
                 using (var writer = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "launcherCrashDump.txt", true)) {
                     writer.WriteLine(DateTime.Today.ToShortDateString() + " at " + DateTime.Today.ToShortTimeString());
                     writer.WriteLine(e.ExceptionObject.ToString());
                     writer.WriteLine("---------------------------------------\n");
                 }
+                Process.Start(AppDomain.CurrentDomain.BaseDirectory);
+                Process.Start("http://yanderesimulator.com/contact.html");
                 this.Close();
-            };*/
+            };
         }
 
         #region Events
@@ -63,6 +68,8 @@ namespace YandereSimLauncher {
         }
 
         private void OnCloseClick(object sender, MouseButtonEventArgs e) {
+            launcherThread.Abort();
+            isAppClosed = true;
             this.Close();
         }
 
@@ -77,6 +84,8 @@ namespace YandereSimLauncher {
 
         private void OnPlayButtonClick(object sender, RoutedEventArgs e) {
             Process.Start(gamePath + "YandereSimulator.exe");
+            launcherThread.Abort();
+            isAppClosed = true;
             this.Close();
         }
 
@@ -161,8 +170,6 @@ namespace YandereSimLauncher {
         private void OnPostTitleClick(object sender, MouseButtonEventArgs e) {
             var block = (TextBlock)sender;
             block.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 125, 205));
-            //var link = posts.Where(p => p.Title == block.Text).FirstOrDefault().URL;
-            //Process.Start(link);
         }
 
         private void OnHeadTitleClick(object sender, MouseButtonEventArgs e) {
@@ -175,53 +182,6 @@ namespace YandereSimLauncher {
                     Process.Start(BLOG_LINK + parts[1]);
                 } else Process.Start(BLOG_LINK + parts[1] + "-" + parts[2]);
             } catch (ArgumentOutOfRangeException) { }
-        }
-        #endregion
-
-        #region News
-        private void GetNews() {
-            var data = GetData(NEWS_URL);
-            //var resp = WordpressResponse.Parse(data);
-            //this.posts = resp.posts;
-
-            Dispatcher.Invoke(new Action(() => {
-                for (int i=0; i<5; i++) {
-                    //PostContainer.Children.Add(MakeDateTextBlock(resp.posts[i].Date));
-                    //PostContainer.Children.Add(MakeTitleTextBlock(resp.posts[i].Title));
-                }
-            }));
-        }
-
-        private TextBlock MakeTitleTextBlock(string title) {
-            var block = new TextBlock();
-            block.Text = title;
-            block.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 125, 205));
-            block.FontSize = 16;
-            block.FontFamily = new FontFamily("Segoe UI Semibold");
-            block.Cursor = Cursors.Hand;
-            block.Margin = new Thickness(0, 0, 0, 10);
-            block.MouseEnter += OnTextEnter;
-            block.MouseLeave += OnTextLeave;
-            block.MouseDown += OnPostTitleClick;
-            return block;
-        }
-
-        private TextBlock MakeDateTextBlock(DateTime date) {
-            var block = new TextBlock();
-            block.Text = date.DayOfWeek + ", " + date.Date.ToShortDateString();
-            block.Foreground = new SolidColorBrush(Color.FromArgb(255, 62, 62, 62));
-            block.FontSize = 11;
-            block.FontFamily = new FontFamily("Segoe UI Semibold");
-            return block;
-        }
-
-        private string GetImageUrl(string content) {
-            if(content.Contains("<img src=\"")) {
-                return content.Split(
-                    new string[] { "<img src=\"" }, StringSplitOptions.None)[1]
-                    .Split('\"')[0];
-            }
-            return string.Empty;
         }
         #endregion
 
@@ -334,8 +294,10 @@ namespace YandereSimLauncher {
                     }));
                 }
                 Thread.Sleep(5000);
-                Thread t = new Thread(StartCheckingInternetConnection);
-                t.Start();
+                if (!isAppClosed) {
+                    launcherThread = new Thread(StartCheckingInternetConnection);
+                    launcherThread.Start();
+                }
             }
         }
 
@@ -369,10 +331,11 @@ namespace YandereSimLauncher {
         private void OnWindowLoaded(object sender, RoutedEventArgs e) {
             RedownloadButton.IsEnabled = false;
             PlayButton.IsEnabled = false;
-            Thread t = new Thread(StartCheckingInternetConnection);
-            t.Start();
-            //Thread n = new Thread(GetNews);
-            //n.Start();
+            launcherThread = new Thread(StartCheckingInternetConnection);
+            launcherThread.Start();
+
+            //Test
+            //throw new OutOfMemoryException();
         }
     }
 }
