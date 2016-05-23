@@ -98,6 +98,18 @@ namespace YandereSimLauncher {
                 t.Start();
             } catch { }
         }
+
+        private void OnHeadTitleClick(object sender, MouseButtonEventArgs e) {
+            try {
+                var block = (TextBlock)sender;
+                var parts = block.Name.Split('_');
+                if (block.Name == "headText_Blog") {
+                    Process.Start(SocialLinks["wordpress"]);
+                } else {
+                    Process.Start(string.Format("{0}{1}.html", BLOG_LINK, parts[1]));
+                }
+            } catch (ArgumentOutOfRangeException) { }
+        }
         #endregion
 
         #region Static
@@ -172,17 +184,7 @@ namespace YandereSimLauncher {
             block.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 125, 205));
         }
 
-        private void OnHeadTitleClick(object sender, MouseButtonEventArgs e) {
-            try {
-                var block = (TextBlock)sender;
-                var parts = block.Name.Split('_');
-                if(block.Name == "headText_Blog") {
-                    Process.Start(SocialLinks["wordpress"]);
-                } else if (parts.Length == 2) {
-                    Process.Start(BLOG_LINK + parts[1]);
-                } else Process.Start(BLOG_LINK + parts[1] + "-" + parts[2]);
-            } catch (ArgumentOutOfRangeException) { }
-        }
+        
         #endregion
 
         #region Logic
