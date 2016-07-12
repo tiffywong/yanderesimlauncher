@@ -15,7 +15,7 @@
             <Image x:Name="CloseButton_Copy" HorizontalAlignment="Right" Height="35" Margin="0,5,60,0" VerticalAlignment="Top" Width="35" Source="Assets/minimize-480.png" MouseEnter="OnButtonHover" MouseLeave="OnButtonLeave" MouseDown="OnMinimizeClick"/>
 
         </Grid>
-        <Image x:Name="image1" HorizontalAlignment="Center" Height="195" Margin="0,60,0,0" VerticalAlignment="Top" Width="622" Source="Assets/mylogo.png">
+        <Image x:Name="image1" HorizontalAlignment="Center" Height="195" Margin="0,105,-0.2,0" VerticalAlignment="Top" Width="622" Source="Assets/mylogo.png">
             <Image.Effect>
                 <DropShadowEffect Color="#FFFF7DCD" Direction="283" BlurRadius="29" Opacity="0.6" ShadowDepth="0"/>
             </Image.Effect>
@@ -25,7 +25,7 @@
                 <DropShadowEffect Direction="280" ShadowDepth="0" BlurRadius="25" Color="#FF85156A" Opacity="0.73"/>
             </ProgressBar.Effect>
         </ProgressBar>
-        <StackPanel HorizontalAlignment="Center" Height="55" Margin="0,240,0,0" VerticalAlignment="Top" Width="169" Orientation="Horizontal" Visibility="Visible">
+        <StackPanel HorizontalAlignment="Center" Height="55" Margin="0,55,0,0" VerticalAlignment="Top" Width="169" Orientation="Horizontal" Visibility="Visible">
             <Image x:Name="Social_youtube" Height="40" Margin="10,0,10,-0.2" Source="Assets/YouTube-icon-dark.png" Width="45" MouseLeave="OnButtonLeave" MouseEnter="OnButtonHover" Cursor="Hand" MouseDown="OnSocialButtonClick"/>
             <Image x:Name="Social_twitter" Height="40" Margin="0,0,7,-0.2" Source="Assets/03-twitter-512.png" MouseLeave="OnButtonLeave" MouseEnter="OnButtonHover" Cursor="Hand" MouseDown="OnSocialButtonClick"/>
             <Image x:Name="Social_twitch" Height="40" Margin="0,0,10,-0.2" Source="Assets/twitch_logo.png" MouseLeave="OnButtonLeave" MouseEnter="OnButtonHover" Cursor="Hand" MouseDown="OnSocialButtonClick"/>
@@ -76,7 +76,7 @@
                 <DropShadowEffect ShadowDepth="0" Color="White"/>
             </TextBlock.Effect>
         </TextBlock>
-        <Button x:Name="RedownloadButton" Content="Force re-download" HorizontalAlignment="Center" Height="40" Margin="290,395,290.2,0" VerticalAlignment="Top" Width="175" BorderBrush="{x:Null}" Background="#FFFFBDF5" FontSize="13.333" FontFamily="Segoe UI Semibold" Cursor="Hand" Foreground="#FF7F0D64" BorderThickness="2" Click="OnRedownloadClick" ToolTip="Download the whole game again in case you're having problems with current version">
+        <Button x:Name="RedownloadButton" Content="Update" HorizontalAlignment="Center" Height="40" Margin="290,395,290.2,0" VerticalAlignment="Top" Width="175" BorderBrush="{x:Null}" Background="#FFFFBDF5" FontSize="13.333" FontFamily="Segoe UI Semibold" Cursor="Hand" Foreground="#FF7F0D64" BorderThickness="2" Click="OnRedownloadClick" ToolTip="Download the whole game again in case you're having problems with current version">
             <Button.Effect>
                 <DropShadowEffect Direction="280.5" Color="#FFE058B9" BlurRadius="15" Opacity="0.6" ShadowDepth="3"/>
             </Button.Effect>

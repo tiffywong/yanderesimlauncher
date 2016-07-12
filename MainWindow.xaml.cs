@@ -310,17 +310,19 @@ namespace YandereSimLauncher {
         }
 
         private void UpdateLinks() {
-            var links = GetData(URLS_LINK).Split('\n');
-            
-            foreach(var l in links) {
-                try {
-                    var lnk = l.Split(':');
-                    Links[GetLinkType(lnk[0])] = lnk[1];
-                } catch (Exception) {
-                    //Really don't care what shit happened, just
-                    continue;
+            try {
+                var links = GetData(URLS_LINK).Split('\n');
+
+                foreach (var l in links) {
+                    try {
+                        var lnk = l.Split(':');
+                        Links[GetLinkType(lnk[0])] = lnk[1];
+                    } catch (Exception) {
+                        //Really don't care what shit happened, just
+                        continue;
+                    }
                 }
-            }
+            } catch (WebException) { }
         }
 
         private void StartCheckingInternetConnection() {
@@ -378,6 +380,7 @@ namespace YandereSimLauncher {
             Dispatcher.Invoke(new Action(() => {
                 PlayButton.IsEnabled = true;
                 RedownloadButton.IsEnabled = true;
+                RedownloadButton.Content = "Force re-download";
                 DownloadStatus.Text = "Game is up-to-date";
                 ProgressBar.Value = 100;
             }));
