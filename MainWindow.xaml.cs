@@ -1,4 +1,14 @@
-﻿using Ionic.Zip;
+﻿/// Yandere Simulator Launcher
+/// By NoxCaos (http://noxcaos.github.io)
+/// for 'Yandere Simulator' project
+/// 
+/// The launcher is available on GitHub 
+/// by request and permission from YandereDeveloper.
+/// 
+/// This code is distributed under GPL license
+/// 
+
+using Ionic.Zip;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,18 +29,32 @@ namespace YandereSimLauncher {
     /// </summary>
     public partial class MainWindow : Window {
 
-        private const string BLOG_LINK = "http://yanderesimulator.com/";
-        private const string VERSION_URL = "http://yanderesimulator.com/version.txt";
-        private const string ZIP_URL = "http://yanderesimulator.com/latest.zip";
-        private const string NEWS_URL = "https://public-api.wordpress.com/rest/v1.1/sites/yanderedev.wordpress.com/posts/";
-        private const string ZIP_NAME = "content.zip";
+        private const string BASE_LINK =    "http://yanderesimulator.com/";
+        private const string URLS_LINK =    "http://yanderesimulator.com/url.txt";
+        private const string NEWS_URL =     "https://public-api.wordpress.com/rest/v1.1/sites/yanderedev.wordpress.com/posts/";
+        private const string ZIP_NAME =     "content.zip";
 
-        private static Dictionary<string, string> SocialLinks = new Dictionary<string, string>() {
-            { "wordpress",  "http://yanderedev.wordpress.com/" },
-            { "youtube",    "https://www.youtube.com/channel/UC1EBJfK7ltjYUFyzysKxr1g" },
-            { "twitter",    "https://twitter.com/YandereDev" },
-            { "patreon",    "https://www.patreon.com/YandereDev?ty=h" },
-            { "tumblr",     "http://yanderedev.tumblr.com/" }
+        private enum GameStatus { Updated, Outdated, NotDownloaded, ContentError }
+
+        private enum LinkType {
+            version, contents,
+            wordpress, youtube, twitter, twitch,
+            volunteer, contact, about, donate
+        }
+
+        private Dictionary<LinkType, string> Links = new Dictionary<LinkType, string>() {
+            { LinkType.version,    "http://yanderesimulator.com/version.txt" },
+            { LinkType.contents,   "http://yanderesimulator.com/latest.zip" },
+
+            { LinkType.wordpress,  "http://yanderedev.wordpress.com/" },
+            { LinkType.youtube,    "https://www.youtube.com/channel/UC1EBJfK7ltjYUFyzysKxr1g" },
+            { LinkType.twitter,    "https://www.twitter.com/YandereDev" },
+            { LinkType.twitch,     "https://www.twitch.tv/yanderedev" },
+
+            { LinkType.volunteer,  "http://yanderesimulator.com/volunteer/" },
+            { LinkType.contact,    "http://yanderesimulator.com/contact/" },
+            { LinkType.about,      "http://yanderesimulator.com/about/" },
+            { LinkType.donate,     "http://yanderesimulator.com/donate/" },
         };
 
         private WebClient webClient;
@@ -48,14 +72,14 @@ namespace YandereSimLauncher {
 
             //Uncomment this for release version
             AppDomain.CurrentDomain.UnhandledException += (s, e) => {
-                var box = MessageBox.Show("If you see this window second time, please report a bug on 'http://yanderesimulator.com/contact.html' and attach 'launcherCrashDump.txt that is next to this executable''", "Fatal error");
+                var box = MessageBox.Show("If you see this window second time, please report a bug on '" + Links[LinkType.contact] + "' and attach 'launcherCrashDump.txt that is next to this executable''", "Fatal error");
                 using (var writer = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "launcherCrashDump.txt", true)) {
                     writer.WriteLine(DateTime.Today.ToShortDateString() + " at " + DateTime.Today.ToShortTimeString());
                     writer.WriteLine(e.ExceptionObject.ToString());
                     writer.WriteLine("---------------------------------------\n");
                 }
                 Process.Start(AppDomain.CurrentDomain.BaseDirectory);
-                Process.Start("http://yanderesimulator.com/contact.html");
+                Process.Start(Links[LinkType.contact]);
                 this.Close();
             };
         }
@@ -79,7 +103,7 @@ namespace YandereSimLauncher {
 
         private void OnSocialButtonClick(object sender, MouseButtonEventArgs e) {
             var netw = ((Image)sender).Name.Split('_')[1];
-            Process.Start(SocialLinks[netw]);
+            Process.Start(Links[GetLinkType(netw)]);
         }
 
         private void OnPlayButtonClick(object sender, RoutedEventArgs e) {
@@ -104,11 +128,15 @@ namespace YandereSimLauncher {
                 var block = (TextBlock)sender;
                 var parts = block.Name.Split('_');
                 if (block.Name == "headText_Blog") {
-                    Process.Start(SocialLinks["wordpress"]);
+                    Process.Start(Links[LinkType.wordpress]);
                 } else {
-                    Process.Start(string.Format("{0}{1}.html", BLOG_LINK, parts[1]));
+                    Process.Start(Links[GetLinkType(parts[1])]);
                 }
-            } catch (ArgumentOutOfRangeException) { }
+            } catch (ArgumentOutOfRangeException) {
+                //Error in block name
+            } catch(ArgumentException) {
+                //The string is not convertable to enum
+            }
         }
         #endregion
 
@@ -141,6 +169,10 @@ namespace YandereSimLauncher {
 
         public static string BytesToMega(long bytes) {
             return (bytes / 1000000.0).ToString("0.00");
+        }
+
+        private static LinkType GetLinkType(string str) {
+            return (LinkType) Enum.Parse(typeof(LinkType), str.Trim().ToLower());
         }
         #endregion
 
@@ -188,12 +220,12 @@ namespace YandereSimLauncher {
         #endregion
 
         #region Logic
-        private bool IsGameUpToDate() {
+        private GameStatus GetGameStatus() {
             try {
-                var serverVersion = GetData(VERSION_URL);
+                var serverVersion = GetData(Links[LinkType.version]);
                 newGameVersion = int.Parse(serverVersion);
             } catch {
-                
+                ReportStatus("Server error. Can't check version");
             }
 
             try {
@@ -201,14 +233,11 @@ namespace YandereSimLauncher {
                 var content = Directory.EnumerateDirectories(gamePath, "YandereSimulator_Data").ElementAt(0);
                 var clientVersion = File.ReadAllText(content + "\\version");
 
-                if (newGameVersion > int.Parse(clientVersion)) {
-                    CleanUp();
-                    return false;
-                } else return true;
-            } catch {
-                CleanUp();
-                return false;
-            }
+                if (newGameVersion > int.Parse(clientVersion))
+                    return GameStatus.Outdated;
+                else return GameStatus.Updated;
+
+            } catch { return GameStatus.NotDownloaded; }
         }
 
         private void CleanUp() {
@@ -219,10 +248,13 @@ namespace YandereSimLauncher {
         }
 
         private void DownloadGameContents() {
+            ReportStatus("Starting download");
+            CleanUp();
+
             if (File.Exists(gamePath + ZIP_NAME)) File.Delete(gamePath + ZIP_NAME);
             webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(UpdateProgressBar);
             webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadDataCompleted);
-            webClient.DownloadFileAsync(new Uri(ZIP_URL), gamePath + ZIP_NAME);
+            webClient.DownloadFileAsync(new Uri(Links[LinkType.contents]), gamePath + ZIP_NAME);
         }
 
         private void DownloadDataCompleted(object sender, AsyncCompletedEventArgs e) {
@@ -267,18 +299,35 @@ namespace YandereSimLauncher {
 
         private void StartCheckThread() {
             ReportStatus("Checking game version...");
-            if (!IsGameUpToDate()) {
-                ReportStatus("Starting download");
-                DownloadGameContents();
-            } else {
-                SetReadyStatus();
+
+            var status = GetGameStatus();
+            switch (status) {
+                case GameStatus.NotDownloaded:  DownloadGameContents();     break;
+                case GameStatus.Outdated:       SetReadyToUpdateStatus();   break;
+                case GameStatus.Updated:        SetReadyStatus();           break;
+                default:                        DownloadGameContents();     break;
+            }
+        }
+
+        private void UpdateLinks() {
+            var links = GetData(URLS_LINK).Split('\n');
+            
+            foreach(var l in links) {
+                try {
+                    var lnk = l.Split(':');
+                    Links[GetLinkType(lnk[0])] = lnk[1];
+                } catch (Exception) {
+                    //Really don't care what shit happened, just
+                    continue;
+                }
             }
         }
 
         private void StartCheckingInternetConnection() {
             ReportStatus("Checking server connection...");
             try {
-                GetData(BLOG_LINK);
+                GetData(BASE_LINK);
+                UpdateLinks();
                 Thread t = new Thread(StartCheckThread);
                 t.Start();
             } catch (WebException) {
@@ -312,6 +361,16 @@ namespace YandereSimLauncher {
         private void ReportStatus(string status) {
             Dispatcher.Invoke(new Action(() => {
                 DownloadStatus.Text = status;
+            }));
+        }
+
+        private void SetReadyToUpdateStatus() {
+            Dispatcher.Invoke(new Action(() => {
+                PlayButton.IsEnabled = true;
+                RedownloadButton.IsEnabled = true;
+                RedownloadButton.Content = "Update now";
+                DownloadStatus.Text = "New version is available!";
+                ProgressBar.Value = 0;
             }));
         }
 

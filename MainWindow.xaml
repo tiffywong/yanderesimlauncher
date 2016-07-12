@@ -15,7 +15,7 @@
             <Image x:Name="CloseButton_Copy" HorizontalAlignment="Right" Height="35" Margin="0,5,60,0" VerticalAlignment="Top" Width="35" Source="Assets/minimize-480.png" MouseEnter="OnButtonHover" MouseLeave="OnButtonLeave" MouseDown="OnMinimizeClick"/>
 
         </Grid>
-        <Image x:Name="image1" HorizontalAlignment="Center" Height="225" Margin="0,70,0,0" VerticalAlignment="Top" Width="680" Source="Assets/mylogo.png">
+        <Image x:Name="image1" HorizontalAlignment="Center" Height="195" Margin="0,60,0,0" VerticalAlignment="Top" Width="622" Source="Assets/mylogo.png">
             <Image.Effect>
                 <DropShadowEffect Color="#FFFF7DCD" Direction="283" BlurRadius="29" Opacity="0.6" ShadowDepth="0"/>
             </Image.Effect>
@@ -25,44 +25,44 @@
                 <DropShadowEffect Direction="280" ShadowDepth="0" BlurRadius="25" Color="#FF85156A" Opacity="0.73"/>
             </ProgressBar.Effect>
         </ProgressBar>
-        <StackPanel HorizontalAlignment="Center" Height="55" Margin="307,60,305.2,0" VerticalAlignment="Top" Width="143" Orientation="Horizontal" Visibility="Collapsed">
-            <Image x:Name="Social_youtube" Height="40" Margin="0,0,5,-0.2" Source="Assets/YouTube-icon-dark.png" Width="45" MouseLeave="OnButtonLeave" MouseEnter="OnButtonHover" Cursor="Hand" MouseDown="OnSocialButtonClick"/>
-            <Image x:Name="Social_twitter" Height="40" Margin="0,0,5,-0.2" Source="Assets/03-twitter-512.png" MouseLeave="OnButtonLeave" MouseEnter="OnButtonHover" Cursor="Hand" MouseDown="OnSocialButtonClick"/>
-            <Image x:Name="Social_patreon" Height="40" Margin="0,0,5,-0.2" Source="Assets/patreon_logo_black.png" MouseLeave="OnButtonLeave" MouseEnter="OnButtonHover" Cursor="Hand" MouseDown="OnSocialButtonClick"/>
+        <StackPanel HorizontalAlignment="Center" Height="55" Margin="0,240,0,0" VerticalAlignment="Top" Width="169" Orientation="Horizontal" Visibility="Visible">
+            <Image x:Name="Social_youtube" Height="40" Margin="10,0,10,-0.2" Source="Assets/YouTube-icon-dark.png" Width="45" MouseLeave="OnButtonLeave" MouseEnter="OnButtonHover" Cursor="Hand" MouseDown="OnSocialButtonClick"/>
+            <Image x:Name="Social_twitter" Height="40" Margin="0,0,7,-0.2" Source="Assets/03-twitter-512.png" MouseLeave="OnButtonLeave" MouseEnter="OnButtonHover" Cursor="Hand" MouseDown="OnSocialButtonClick"/>
+            <Image x:Name="Social_twitch" Height="40" Margin="0,0,10,-0.2" Source="Assets/twitch_logo.png" MouseLeave="OnButtonLeave" MouseEnter="OnButtonHover" Cursor="Hand" MouseDown="OnSocialButtonClick"/>
         </StackPanel>
         <Image x:Name="image2" HorizontalAlignment="Left" Height="65" Margin="180,435,0,0" VerticalAlignment="Top" Width="65" Source="Assets/heart.png" MouseEnter="OnButtonHover" MouseLeave="OnButtonLeave" RenderTransformOrigin="0.5,0.5"/>
-        <Button x:Name="PlayButton" Content="PLAY" HorizontalAlignment="Center" Height="40" Margin="0,340,0,0" VerticalAlignment="Top" Width="145" BorderBrush="{x:Null}" Background="#FFFFBDF5" FontSize="18.667" FontFamily="Segoe UI Semibold" Cursor="Hand" Foreground="#FF7F0D64" BorderThickness="2" Click="OnPlayButtonClick" ToolTip="Play Yandere Simulator">
+        <Button x:Name="PlayButton" Content="PLAY" HorizontalAlignment="Center" Height="43" Margin="290,342,290.2,0" VerticalAlignment="Top" Width="175" BorderBrush="{x:Null}" Background="#FFFFBDF5" FontSize="18.667" FontFamily="Segoe UI Semibold" Cursor="Hand" Foreground="#FF7F0D64" BorderThickness="2" Click="OnPlayButtonClick" ToolTip="Play Yandere Simulator">
             <Button.Effect>
                 <DropShadowEffect Direction="272" BlurRadius="27" Color="#FFE058B9" Opacity="0.715" ShadowDepth="3"/>
             </Button.Effect>
         </Button>
         <TextBlock x:Name="DownloadStatus" HorizontalAlignment="Center" Margin="50,453,52.4,0" TextWrapping="Wrap" Text="Downloading 200 of 456mb" VerticalAlignment="Top" Height="27" Width="328" Foreground="#FF85156A" FontSize="17.333" TextAlignment="Center"/>
         <StackPanel HorizontalAlignment="Center" Height="35" Margin="10,5,115.2,0" VerticalAlignment="Top" Width="630" Orientation="Horizontal">
-            <TextBlock x:Name="headText_volunteer" TextWrapping="Wrap" Text="VOLUNTEER" VerticalAlignment="Top" Height="35" Width="135" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
+            <TextBlock x:Name="headText_Volunteer" TextWrapping="Wrap" Text="VOLUNTEER" VerticalAlignment="Top" Height="35" Width="135" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
                 <TextBlock.Effect>
                     <DropShadowEffect ShadowDepth="0" Color="White"/>
                 </TextBlock.Effect>
             </TextBlock>
             <TextBlock TextWrapping="Wrap" Text="•" VerticalAlignment="Top" Height="35" Width="10" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" Margin="5,0"/>
-            <TextBlock x:Name="headText_contact" TextWrapping="Wrap" Text="CONTACT" VerticalAlignment="Top" Height="35" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand" Margin="0">
+            <TextBlock x:Name="headText_Contact" TextWrapping="Wrap" Text="CONTACT" VerticalAlignment="Top" Height="35" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand" Margin="0">
                 <TextBlock.Effect>
                     <DropShadowEffect ShadowDepth="0" Color="White"/>
                 </TextBlock.Effect>
             </TextBlock>
             <TextBlock TextWrapping="Wrap" Text="•" VerticalAlignment="Top" Height="35" Width="10" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" Margin="5,0"/>
-            <TextBlock x:Name="headText_donate" TextWrapping="Wrap" Text="DONATE" VerticalAlignment="Top" Height="35" Width="115" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
+            <TextBlock x:Name="headText_Donate" TextWrapping="Wrap" Text="DONATE" VerticalAlignment="Top" Height="35" Width="115" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
                 <TextBlock.Effect>
                     <DropShadowEffect ShadowDepth="0" Color="White"/>
                 </TextBlock.Effect>
             </TextBlock>
             <TextBlock TextWrapping="Wrap" Text="•" VerticalAlignment="Top" Height="35" Width="10" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" Margin="-12,0,5,0"/>
-            <TextBlock x:Name="headText_about" TextWrapping="Wrap" Text="ABOUT" VerticalAlignment="Top" Height="35" Width="80" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
+            <TextBlock x:Name="headText_About" TextWrapping="Wrap" Text="ABOUT" VerticalAlignment="Top" Height="35" Width="80" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
                 <TextBlock.Effect>
                     <DropShadowEffect ShadowDepth="0" Color="White"/>
                 </TextBlock.Effect>
             </TextBlock>
-            
-            
+
+
             <TextBlock TextWrapping="Wrap" Text="•" VerticalAlignment="Top" Height="35" Width="10" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" Margin="5,0"/>
             <TextBlock x:Name="headText_Blog" TextWrapping="Wrap" Text="BLOG" VerticalAlignment="Top" Height="35" Width="65" Foreground="White" FontFamily="Segoe UI Semibold" FontSize="24" MouseEnter="OnTextEnter" MouseLeave="OnTextLeave" MouseDown="OnHeadTitleClick" Cursor="Hand">
                 <TextBlock.Effect>
@@ -71,12 +71,12 @@
             </TextBlock>
         </StackPanel>
         <Image x:Name="image2_Copy" HorizontalAlignment="Right" Height="65" Margin="0,435,185.2,0" VerticalAlignment="Top" Width="65" Source="Assets/heart.1png.png" MouseEnter="OnButtonHover" MouseLeave="OnButtonLeave" RenderTransformOrigin="0.5,0.5"/>
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Center" Margin="0,285,0,0" TextWrapping="Wrap" Text="- G A M E   L A U N C H E R -" VerticalAlignment="Top" Height="32" Width="264" FontSize="18.667" TextAlignment="Center" FontFamily="Segoe UI Semibold" Foreground="White">
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Center" Margin="246,300,245.2,0" TextWrapping="Wrap" Text="- G A M E   L A U N C H E R -" VerticalAlignment="Top" Height="32" Width="264" FontSize="18.667" TextAlignment="Center" FontFamily="Segoe UI Semibold" Foreground="White">
             <TextBlock.Effect>
                 <DropShadowEffect ShadowDepth="0" Color="White"/>
             </TextBlock.Effect>
         </TextBlock>
-        <Button x:Name="RedownloadButton" Content="Force re-download" HorizontalAlignment="Center" Height="26" Margin="0,399,0,0" VerticalAlignment="Top" Width="175" BorderBrush="{x:Null}" Background="#FFFFBDF5" FontSize="13.333" FontFamily="Segoe UI Semibold" Cursor="Hand" Foreground="#FF7F0D64" BorderThickness="2" Click="OnRedownloadClick" ToolTip="Download the whole game again in case you're having problems with current version">
+        <Button x:Name="RedownloadButton" Content="Force re-download" HorizontalAlignment="Center" Height="40" Margin="290,395,290.2,0" VerticalAlignment="Top" Width="175" BorderBrush="{x:Null}" Background="#FFFFBDF5" FontSize="13.333" FontFamily="Segoe UI Semibold" Cursor="Hand" Foreground="#FF7F0D64" BorderThickness="2" Click="OnRedownloadClick" ToolTip="Download the whole game again in case you're having problems with current version">
             <Button.Effect>
                 <DropShadowEffect Direction="280.5" Color="#FFE058B9" BlurRadius="15" Opacity="0.6" ShadowDepth="3"/>
             </Button.Effect>
