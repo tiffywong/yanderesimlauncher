@@ -30,31 +30,34 @@ namespace YandereSimLauncher {
     public partial class MainWindow : Window {
 
         private const string BASE_LINK =    "http://yanderesimulator.com/";
-        private const string URLS_LINK =    "http://yanderesimulator.com/url.txt";
+        private const string URLS_LINK =    "http://yanderesimulator.com/urls.txt";
         private const string NEWS_URL =     "https://public-api.wordpress.com/rest/v1.1/sites/yanderedev.wordpress.com/posts/";
         private const string ZIP_NAME =     "content.zip";
+        private const int VERSION =         1;
 
         private enum GameStatus { Updated, Outdated, NotDownloaded, ContentError }
 
         private enum LinkType {
-            version, contents,
+            version, contents, newlauncher, launcher,
             wordpress, youtube, twitter, twitch,
             volunteer, contact, about, donate
         }
 
         private Dictionary<LinkType, string> Links = new Dictionary<LinkType, string>() {
-            { LinkType.version,    "http://yanderesimulator.com/version.txt" },
-            { LinkType.contents,   "http://yanderesimulator.com/latest.zip" },
+            { LinkType.version,     "http://yanderesimulator.com/version.txt" },
+            { LinkType.contents,    "http://yanderesimulator.com/latest.zip" },
+            { LinkType.launcher,    "http://yanderesimulator.com/launcherversion.txt" },
+            { LinkType.newlauncher, "http://yanderesimulator.com/download/" },
 
-            { LinkType.wordpress,  "http://yanderedev.wordpress.com/" },
-            { LinkType.youtube,    "https://www.youtube.com/channel/UC1EBJfK7ltjYUFyzysKxr1g" },
-            { LinkType.twitter,    "https://www.twitter.com/YandereDev" },
-            { LinkType.twitch,     "https://www.twitch.tv/yanderedev" },
+            { LinkType.wordpress,   "http://yanderedev.wordpress.com/" },
+            { LinkType.youtube,     "https://www.youtube.com/channel/UC1EBJfK7ltjYUFyzysKxr1g" },
+            { LinkType.twitter,     "https://www.twitter.com/YandereDev" },
+            { LinkType.twitch,      "https://www.twitch.tv/yanderedev" },
 
-            { LinkType.volunteer,  "http://yanderesimulator.com/volunteer/" },
-            { LinkType.contact,    "http://yanderesimulator.com/contact/" },
-            { LinkType.about,      "http://yanderesimulator.com/about/" },
-            { LinkType.donate,     "http://yanderesimulator.com/donate/" },
+            { LinkType.volunteer,   "http://yanderesimulator.com/volunteer/" },
+            { LinkType.contact,     "http://yanderesimulator.com/contact/" },
+            { LinkType.about,       "http://yanderesimulator.com/about/" },
+            { LinkType.donate,      "http://yanderesimulator.com/donate/" },
         };
 
         private WebClient webClient;
@@ -62,6 +65,7 @@ namespace YandereSimLauncher {
         private int newGameVersion;
         private Thread launcherThread;
         private bool isAppClosed;
+        private bool isLinkUpdated;
 
         //private List<Post> posts;
 
@@ -72,14 +76,14 @@ namespace YandereSimLauncher {
 
             //Uncomment this for release version
             AppDomain.CurrentDomain.UnhandledException += (s, e) => {
-                var box = MessageBox.Show("If you see this window second time, please report a bug on '" + Links[LinkType.contact] + "' and attach 'launcherCrashDump.txt that is next to this executable''", "Fatal error");
+                var box = MessageBox.Show("If you see this window second time, please report a bug on 'gleb.noxcaos@gmail.com' and attach 'launcherCrashDump.txt that is next to this executable''", "Fatal error");
                 using (var writer = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "launcherCrashDump.txt", true)) {
                     writer.WriteLine(DateTime.Today.ToShortDateString() + " at " + DateTime.Today.ToShortTimeString());
                     writer.WriteLine(e.ExceptionObject.ToString());
                     writer.WriteLine("---------------------------------------\n");
                 }
                 Process.Start(AppDomain.CurrentDomain.BaseDirectory);
-                Process.Start(Links[LinkType.contact]);
+                Process.Start("mailto:gleb.noxcaos@gmail.com");
                 this.Close();
             };
         }
@@ -316,20 +320,39 @@ namespace YandereSimLauncher {
                 foreach (var l in links) {
                     try {
                         var lnk = l.Split(':');
-                        Links[GetLinkType(lnk[0])] = lnk[1];
+
+                        if(lnk.Length > 2) Links[GetLinkType(lnk[0])] = lnk[1].Trim() + ":" + lnk[2].Trim();
+                        else Links[GetLinkType(lnk[0])] = "http://" + lnk[2].Trim();
+
                     } catch (Exception) {
                         //Really don't care what shit happened, just
                         continue;
                     }
                 }
+                isLinkUpdated = true;
+
             } catch (WebException) { }
+        }
+
+        private bool IsLauncherUpdated() {
+            var launcherVersion = GetData(Links[LinkType.launcher]);
+            return int.Parse(launcherVersion) == VERSION;
         }
 
         private void StartCheckingInternetConnection() {
             ReportStatus("Checking server connection...");
             try {
                 GetData(BASE_LINK);
-                UpdateLinks();
+                if(!isLinkUpdated) UpdateLinks();
+                if (!IsLauncherUpdated()) {
+                    MessageBox.Show("This launcher is now obsolete. A new launcher is now available. Please download the new launcher from the official website!", "Outdated version");
+                    Process.Start(Links[LinkType.newlauncher]);
+                    Dispatcher.Invoke(new Action(() => {
+                        this.Close();
+                    }));
+                    return;
+                }
+
                 Thread t = new Thread(StartCheckThread);
                 t.Start();
             } catch (WebException) {
