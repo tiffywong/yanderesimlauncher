@@ -111,10 +111,12 @@ namespace YandereSimLauncher {
         }
 
         private void OnPlayButtonClick(object sender, RoutedEventArgs e) {
-            Process.Start(gamePath + "YandereSimulator.exe");
-            launcherThread.Abort();
-            isAppClosed = true;
-            this.Close();
+            try {
+                Process.Start(gamePath + "YandereSimulator.exe");
+                launcherThread.Abort();
+                isAppClosed = true;
+                this.Close();
+            } catch (Win32Exception) { ReportStatus("Can't launch the game"); }
         }
 
         private void OnRedownloadClick(object sender, RoutedEventArgs e) {
@@ -319,10 +321,14 @@ namespace YandereSimLauncher {
 
                 foreach (var l in links) {
                     try {
-                        var lnk = l.Split(':');
+                        var lnk = l.Split('"');
 
-                        if(lnk.Length > 2) Links[GetLinkType(lnk[0])] = lnk[1].Trim() + ":" + lnk[2].Trim();
-                        else Links[GetLinkType(lnk[0])] = "http://" + lnk[2].Trim();
+                        var newLink = lnk[1].Trim();
+                        if (!newLink.StartsWith("http")) {
+                            newLink = "http://" + newLink;
+                        }
+
+                        Links[GetLinkType(lnk[0])] = newLink;
 
                     } catch (Exception) {
                         //Really don't care what shit happened, just
