@@ -268,7 +268,7 @@ namespace YandereSimLauncher {
             webClient.DownloadProgressChanged -= new DownloadProgressChangedEventHandler(UpdateProgressBar);
             webClient.DownloadFileCompleted -= new AsyncCompletedEventHandler(DownloadDataCompleted);
 
-            GetData("http://simplehitcounter.com/hit.php?uid=2101053&f=16777215&b=0");
+            try { GetData("http://simplehitcounter.com/hit.php?uid=2101053&f=16777215&b=0"); } catch { }
             ReportStatus("Extracting...");
             try {
                 using (var arc = ZipFile.Read(gamePath + ZIP_NAME)) {
@@ -284,6 +284,7 @@ namespace YandereSimLauncher {
             }
             try {
                 File.WriteAllText(gamePath + "YandereSimulator_Data\\" + "version", newGameVersion.ToString());
+                SetReadyStatus();
             } catch {
                 Dispatcher.Invoke(new Action(() => {
                     RedownloadButton.IsEnabled = true;
@@ -292,7 +293,6 @@ namespace YandereSimLauncher {
                 MessageBox.Show("Validation error happend while installing. However, the game was successfully downloaded and extracted. You can try starting it manually", "Version validator");
                 Process.Start(gamePath);
             }
-            SetReadyStatus();
         }
 
         private void UpdateProgressBar(object sender, DownloadProgressChangedEventArgs e) {
