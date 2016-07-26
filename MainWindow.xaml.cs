@@ -120,7 +120,7 @@ namespace YandereSimLauncher {
                 Process.Start(gamePath + "YandereSimulator.exe");
                 launcherThread.Abort();
                 isAppClosed = true;
-                this.Close();
+                Close();
             } catch (Win32Exception) { ReportStatus("Can't launch the game"); }
         }
 
@@ -128,8 +128,8 @@ namespace YandereSimLauncher {
             try {
                 RedownloadButton.IsEnabled = false;
                 PlayButton.IsEnabled = false;
-                CleanUp();
-                Thread t = new Thread(StartCheckingInternetConnection);
+                //CleanUp();
+                var t = new Thread(() => StartCheckThread(true));
                 t.Start();
             } catch { }
         }
@@ -266,7 +266,6 @@ namespace YandereSimLauncher {
         private void DownloadGameContents() {
             if (contentLinks.Count > curLink) {
                 ReportStatus("Starting download");
-                CleanUp();
 
                 if (File.Exists(gamePath + ZIP_NAME)) File.Delete(gamePath + ZIP_NAME);
                 try {
@@ -327,10 +326,15 @@ namespace YandereSimLauncher {
                 ));
         }
 
-        private void StartCheckThread() {
+        private void StartCheckThread(bool force = false) {
             ReportStatus("Checking game version...");
 
             var status = GetGameStatus();
+            if (force && status == GameStatus.Outdated) {
+                DownloadGameContents();
+                return;
+            }
+
             switch (status) {
                 case GameStatus.NotDownloaded:  DownloadGameContents();     break;
                 case GameStatus.Outdated:       SetReadyToUpdateStatus();   break;
@@ -376,7 +380,7 @@ namespace YandereSimLauncher {
             ReportStatus("Checking server connection...");
             try {
                 GetData(BASE_LINK);
-                if(!isLinkUpdated) UpdateLinks();
+                if (!isLinkUpdated) UpdateLinks();
                 if (!IsLauncherUpdated()) {
                     MessageBox.Show("This launcher is now obsolete. A new launcher is now available. Please download the new launcher from the official website!", "Outdated version");
                     Process.Start(Links[LinkType.newlauncher]);
@@ -386,7 +390,7 @@ namespace YandereSimLauncher {
                     return;
                 }
 
-                Thread t = new Thread(StartCheckThread);
+                var t = new Thread(() => StartCheckThread());
                 t.Start();
             } catch (WebException) {
                 SetServerUnavailableStatus("Can't connect to update server");
@@ -395,7 +399,10 @@ namespace YandereSimLauncher {
                     launcherThread = new Thread(StartCheckingInternetConnection);
                     launcherThread.Start();
                 }
-            } 
+            } catch (SocketException) {
+                SetServerUnavailableStatus("Can't connect to update server");
+                MessageBox.Show("Can't connect. Looks like your antivirus blocks the connection. Please add the app to exclusions or turn the antivirus off", "Ooops!");
+            }
         }
 
         private void SetServerUnavailableStatus(string serverStatus) {
@@ -431,6 +438,7 @@ namespace YandereSimLauncher {
                 PlayButton.IsEnabled = true;
                 RedownloadButton.IsEnabled = true;
                 RedownloadButton.Content = "Update now";
+                RedownloadButton.ToolTip = "Update to new version";
                 DownloadStatus.Text = "New version is available!";
                 ProgressBar.Value = 0;
             }));
@@ -441,6 +449,7 @@ namespace YandereSimLauncher {
                 PlayButton.IsEnabled = true;
                 RedownloadButton.IsEnabled = true;
                 RedownloadButton.Content = "Force re-download";
+                RedownloadButton.ToolTip = "Re-download the game in case it doesn't work";
                 DownloadStatus.Text = "Game is up-to-date";
                 ProgressBar.Value = 100;
             }));
