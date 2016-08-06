@@ -47,7 +47,6 @@ namespace YandereSimLauncher {
 
         private Dictionary<LinkType, string> Links = new Dictionary<LinkType, string>() {
             { LinkType.version,     "http://yanderesimulator.com/version.txt" },
-            //{ LinkType.contents,    "http://yanderesimulator.com/latest.zip" },
             { LinkType.launcher,    "http://yanderesimulator.com/launcherversion.txt" },
             { LinkType.newlauncher, "http://yanderesimulator.com/download/" },
 
@@ -313,8 +312,7 @@ namespace YandereSimLauncher {
                     RedownloadButton.IsEnabled = true;
                     PlayButton.IsEnabled = false;
                 }));
-                MessageBox.Show("Validation error happend while installing. However, the game was successfully downloaded and extracted. You can try starting it manually", "Version validator");
-                Process.Start(gamePath);
+                MessageBox.Show("Seems like server has damaged files. We already working at it! Please, try downloading again in an hour", "Error");
             }
         }
 
@@ -402,6 +400,9 @@ namespace YandereSimLauncher {
             } catch (SocketException) {
                 SetServerUnavailableStatus("Can't connect to update server");
                 MessageBox.Show("Can't connect. Looks like your antivirus blocks the connection. Please add the app to exclusions or turn the antivirus off", "Ooops!");
+            } finally {
+                SetServerUnavailableStatus("Can't connect to update server");
+                MessageBox.Show("The connection is blocked. Try moving launcher to C:\\ProgramFiles folder and try again", "Ooops!");
             }
         }
 
