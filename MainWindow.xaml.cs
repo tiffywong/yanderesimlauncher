@@ -370,8 +370,13 @@ namespace YandereSimLauncher {
         }
 
         private bool IsLauncherUpdated() {
-            var launcherVersion = GetData(Links[LinkType.launcher]);
-            return int.Parse(launcherVersion) == VERSION;
+            int ver = 0;
+            try {
+                var launcherVersion = GetData(Links[LinkType.launcher]);
+                ver = int.Parse(launcherVersion);
+            } catch (FormatException) { return true; }
+
+            return ver == VERSION;
         }
 
         private void StartCheckingInternetConnection() {
