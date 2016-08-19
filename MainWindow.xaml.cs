@@ -30,12 +30,12 @@ namespace YandereSimLauncher {
     /// </summary>
     public partial class MainWindow : Window {
 
-        private const string BASE_LINK =    "http://yanderesimulator.com/";
-        private const string URLS_LINK =    "http://yanderesimulator.com/urls.txt";
+        private const string BASE_LINK = "http://yanderesimulator.com/";
+        private const string URLS_LINK = "http://yanderesimulator.com/urls.txt";
         //private const string URLS_LINK =    "http://localhost:8080/urls.txt";
-        private const string NEWS_URL =     "https://public-api.wordpress.com/rest/v1.1/sites/yanderedev.wordpress.com/posts/";
-        private const string ZIP_NAME =     "content.zip";
-        private const int VERSION =         2;
+        private const string NEWS_URL = "https://public-api.wordpress.com/rest/v1.1/sites/yanderedev.wordpress.com/posts/";
+        private const string ZIP_NAME = "content.zip";
+        private const int VERSION = 2;
 
         private enum GameStatus { Updated, Outdated, NotDownloaded, ContentError }
 
@@ -144,7 +144,7 @@ namespace YandereSimLauncher {
                 }
             } catch (ArgumentOutOfRangeException) {
                 //Error in block name
-            } catch(ArgumentException) {
+            } catch (ArgumentException) {
                 //The string is not convertable to enum
             }
         }
@@ -182,7 +182,7 @@ namespace YandereSimLauncher {
         }
 
         private static LinkType GetLinkType(string str) {
-            return (LinkType) Enum.Parse(typeof(LinkType), str.Trim().ToLower());
+            return (LinkType)Enum.Parse(typeof(LinkType), str.Trim().ToLower());
         }
         #endregion
 
@@ -226,7 +226,7 @@ namespace YandereSimLauncher {
             block.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 125, 205));
         }
 
-        
+
         #endregion
 
         #region Logic
@@ -278,8 +278,16 @@ namespace YandereSimLauncher {
                     launcherThread.Start();
                 }
             } else {
-                SetServerUnavailableStatus("Can't reach download source");
-                MessageBox.Show("Can't reach download source. Maybe it is unavailable now or your antivirus blocks the connection", "Ooops!");
+                if (File.Exists(gamePath + ZIP_NAME)) {
+                    Dispatcher.Invoke(new Action(() => {
+                        RedownloadButton.IsEnabled = true;
+                        PlayButton.IsEnabled = false;
+                    }));
+                    MessageBox.Show("Seems like server has damaged files. We already working at it! Please, try downloading again in an hour", "Error");
+                } else {
+                    SetServerUnavailableStatus("Can't reach download source");
+                    MessageBox.Show("Can't reach download source. Maybe it is unavailable now or your antivirus blocks the connection", "Ooops!");
+                }
             }
         }
 
@@ -403,9 +411,17 @@ namespace YandereSimLauncher {
                     launcherThread.Start();
                 }
             } catch (SocketException) {
-                SetServerUnavailableStatus("Can't connect to update server");
-                MessageBox.Show("Can't connect. Looks like your antivirus blocks the connection. Please add the app to exclusions or turn the antivirus off", "Ooops!");
-            } finally {
+                if (File.Exists(gamePath + ZIP_NAME)) {
+                    Dispatcher.Invoke(new Action(() => {
+                        RedownloadButton.IsEnabled = true;
+                        PlayButton.IsEnabled = false;
+                    }));
+                    MessageBox.Show("Seems like server has damaged files. We already working at it! Please, try downloading again in an hour", "Error");
+                } else {
+                    SetServerUnavailableStatus("Can't connect to update server");
+                    MessageBox.Show("Can't connect. Looks like your antivirus blocks the connection. Please add the app to exclusions or turn the antivirus off", "Ooops!");
+                }
+            } catch(Exception) {
                 SetServerUnavailableStatus("Can't connect to update server");
                 MessageBox.Show("The connection is blocked. Try moving launcher to C:\\ProgramFiles folder and try again", "Ooops!");
             }
