@@ -23,6 +23,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using Mega = CG.Web.MegaApiClient;
 
 namespace YandereSimLauncher {
     /// <summary>
@@ -32,10 +33,10 @@ namespace YandereSimLauncher {
 
         private const string BASE_LINK = "http://yanderesimulator.com/";
         private const string URLS_LINK = "http://yanderesimulator.com/urls.txt";
-        //private const string URLS_LINK =    "http://localhost:8080/urls.txt";
+        //private const string URLS_LINK =    "http://localhost:3000/urls.txt";
         private const string NEWS_URL = "https://public-api.wordpress.com/rest/v1.1/sites/yanderedev.wordpress.com/posts/";
         private const string ZIP_NAME = "content.zip";
-        private const int VERSION = 2;
+        private const int VERSION = 3;
 
         private enum GameStatus { Updated, Outdated, NotDownloaded, ContentError }
 
@@ -64,12 +65,14 @@ namespace YandereSimLauncher {
         private List<string> contentLinks = new List<string>();
 
         private WebClient webClient;
+        private Mega.MegaApiClient megaClient;
         private string gamePath;
         private int newGameVersion;
         private int curLink;
         private Thread launcherThread;
         private bool isAppClosed;
         private bool isLinkUpdated;
+        private FileStream fileStream;
 
         //private List<Post> posts;
 
@@ -79,7 +82,7 @@ namespace YandereSimLauncher {
             gamePath = AppDomain.CurrentDomain.BaseDirectory;
 
             //Uncomment this for release version
-            AppDomain.CurrentDomain.UnhandledException += (s, e) => {
+            /*AppDomain.CurrentDomain.UnhandledException += (s, e) => {
                 var box = MessageBox.Show("If you see this window second time, please report a bug on 'gleb.noxcaos@gmail.com' and attach 'launcherCrashDump.txt that is next to this executable''", "Fatal error");
                 using (var writer = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "launcherCrashDump.txt", true)) {
                     writer.WriteLine(DateTime.Today.ToShortDateString() + " at " + DateTime.Today.ToShortTimeString());
@@ -89,7 +92,13 @@ namespace YandereSimLauncher {
                 Process.Start(AppDomain.CurrentDomain.BaseDirectory);
                 Process.Start("mailto:gleb.noxcaos@gmail.com");
                 this.Close();
-            };
+            };*/
+            
+        }
+
+        private void MegaInit() {
+            megaClient = new Mega.MegaApiClient();
+            megaClient.LoginAnonymous();
         }
 
         #region Events
@@ -102,6 +111,7 @@ namespace YandereSimLauncher {
         private void OnCloseClick(object sender, MouseButtonEventArgs e) {
             launcherThread.Abort();
             isAppClosed = true;
+            megaClient.Logout();
             this.Close();
         }
 
@@ -127,7 +137,7 @@ namespace YandereSimLauncher {
             try {
                 RedownloadButton.IsEnabled = false;
                 PlayButton.IsEnabled = false;
-                //CleanUp();
+                CleanUp();
                 var t = new Thread(() => StartCheckThread(true));
                 t.Start();
             } catch { }
@@ -263,19 +273,30 @@ namespace YandereSimLauncher {
         }
 
         private void DownloadGameContents() {
+
             if (contentLinks.Count > curLink) {
                 ReportStatus("Starting download");
 
                 if (File.Exists(gamePath + ZIP_NAME)) File.Delete(gamePath + ZIP_NAME);
-                try {
-                    webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(UpdateProgressBar);
-                    webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadDataCompleted);
-                    webClient.DownloadFileAsync(new Uri(contentLinks[curLink]), gamePath + ZIP_NAME);
-                } catch (SocketException) {
-                    curLink++;
-                    if (launcherThread != null & launcherThread.IsAlive) launcherThread.Abort();
-                    launcherThread = new Thread(StartCheckingInternetConnection);
-                    launcherThread.Start();
+
+                if (megaClient != null && contentLinks[curLink].Contains("mega")) {
+                    string filePath = gamePath + ZIP_NAME;
+                    fileStream = new FileStream(filePath, FileMode.Create);
+                    using (var downloadStream = new ProgressionStream(megaClient.Download(new Uri(contentLinks[curLink])), this.PrintProgression)) {
+                        downloadStream.CopyTo(fileStream);
+                    }
+
+                } else {
+                    try {
+                        webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(UpdateProgressBar);
+                        webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadDataCompleted);
+                        webClient.DownloadFileAsync(new Uri(contentLinks[curLink]), gamePath + ZIP_NAME);
+                    } catch (SocketException) {
+                        curLink++;
+                        if (launcherThread != null & launcherThread.IsAlive) launcherThread.Abort();
+                        launcherThread = new Thread(StartCheckingInternetConnection);
+                        launcherThread.Start();
+                    }
                 }
             } else {
                 if (File.Exists(gamePath + ZIP_NAME)) {
@@ -291,12 +312,29 @@ namespace YandereSimLauncher {
             }
         }
 
+
+        private void PrintProgression(double progression) {
+            ReportProgress(progression);
+            ReportStatus(string.Format("Downloaded {0}%", progression.ToString("0.00")));
+
+            if (progression >= 100) {
+                fileStream.Flush();
+                fileStream.Close();
+                ExtractFiles();
+            }
+        }
+
         private void DownloadDataCompleted(object sender, AsyncCompletedEventArgs e) {
             CleanUp();
             webClient.DownloadProgressChanged -= new DownloadProgressChangedEventHandler(UpdateProgressBar);
             webClient.DownloadFileCompleted -= new AsyncCompletedEventHandler(DownloadDataCompleted);
 
+            ExtractFiles();
+        }
+
+        private void ExtractFiles() {
             try { GetData("http://simplehitcounter.com/hit.php?uid=2101053&f=16777215&b=0"); } catch { }
+
             ReportStatus("Extracting...");
             try {
                 using (var arc = ZipFile.Read(gamePath + ZIP_NAME)) {
@@ -401,6 +439,8 @@ namespace YandereSimLauncher {
                     return;
                 }
 
+                MegaInit();
+
                 var t = new Thread(() => StartCheckThread());
                 t.Start();
             } catch (WebException) {
@@ -443,7 +483,7 @@ namespace YandereSimLauncher {
             }
         }
 
-        private void ReportProgress(int progress) {
+        private void ReportProgress(double progress) {
             Dispatcher.Invoke(new Action(() => {
                 ProgressBar.Value = progress;
             }));
