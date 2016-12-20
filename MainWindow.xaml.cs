@@ -36,7 +36,7 @@ namespace YandereSimLauncher {
         //private const string URLS_LINK =    "http://localhost:3000/urls.txt";
         private const string NEWS_URL = "https://public-api.wordpress.com/rest/v1.1/sites/yanderedev.wordpress.com/posts/";
         private const string ZIP_NAME = "content.zip";
-        private const int VERSION = 3;
+        private const int VERSION = 4;
 
         private enum GameStatus { Updated, Outdated, NotDownloaded, ContentError }
 
@@ -82,7 +82,7 @@ namespace YandereSimLauncher {
             gamePath = AppDomain.CurrentDomain.BaseDirectory;
 
             //Uncomment this for release version
-            /*AppDomain.CurrentDomain.UnhandledException += (s, e) => {
+            AppDomain.CurrentDomain.UnhandledException += (s, e) => {
                 var box = MessageBox.Show("If you see this window second time, please report a bug on 'gleb.noxcaos@gmail.com' and attach 'launcherCrashDump.txt that is next to this executable''", "Fatal error");
                 using (var writer = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "launcherCrashDump.txt", true)) {
                     writer.WriteLine(DateTime.Today.ToShortDateString() + " at " + DateTime.Today.ToShortTimeString());
@@ -92,7 +92,7 @@ namespace YandereSimLauncher {
                 Process.Start(AppDomain.CurrentDomain.BaseDirectory);
                 Process.Start("mailto:gleb.noxcaos@gmail.com");
                 this.Close();
-            };*/
+            };
             
         }
 
