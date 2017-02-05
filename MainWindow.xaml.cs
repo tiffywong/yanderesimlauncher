@@ -73,6 +73,7 @@ namespace YandereSimLauncher {
         private bool isAppClosed;
         private bool isLinkUpdated;
         private FileStream fileStream;
+        private ProgressionStream megaStream;
 
         //private List<Post> posts;
 
@@ -85,14 +86,20 @@ namespace YandereSimLauncher {
             AppDomain.CurrentDomain.UnhandledException += (s, e) => {
                 Properties.Settings.Default.Crashed = true;
 
-                var box = MessageBox.Show("If you see this window second time, please report a bug on 'gleb.noxcaos@gmail.com' and attach 'launcherCrashDump.txt' that is next to this executable", "Fatal error");
                 using (var writer = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "launcherCrashDump.txt", true)) {
                     writer.WriteLine(DateTime.Today.ToShortDateString() + " at " + DateTime.Now.ToString("HH:mm:ss"));
                     writer.WriteLine(e.ExceptionObject.ToString());
                     writer.WriteLine("---------------------------------------\n");
                 }
+
+                MessageBox.Show("Please report a bug on 'gleb.noxcaos@gmail.com' and attach 'launcherCrashDump.txt' that is next to this executable", "Fatal error");
+                var box = MessageBox.Show("Do you want to try in-browser download? Launcher will open a download page for you", "Hey", MessageBoxButton.YesNo);
+
+                if(box == MessageBoxResult.Yes && contentLinks != null && contentLinks.Count > 0)
+                    Process.Start(contentLinks[0]);
+
                 Process.Start(AppDomain.CurrentDomain.BaseDirectory);
-                Process.Start("mailto:gleb.noxcaos@gmail.com");
+                //Process.Start("mailto:gleb.noxcaos@gmail.com");
 
                 Application.Current.Shutdown();
             };
@@ -277,7 +284,6 @@ namespace YandereSimLauncher {
         }
 
         private void DownloadGameContents() {
-
             if (contentLinks.Count > curLink) {
                 ReportStatus("Starting download");
 
@@ -292,29 +298,20 @@ namespace YandereSimLauncher {
                         fileStream = new FileStream(filePath, FileMode.Create);
 
                         try {
-                            using (var downloadStream = new ProgressionStream(megaClient.Download(new Uri(contentLinks[curLink])), PrintProgression)) {
-                                downloadStream.CopyTo(fileStream);
+                            using (megaStream = new ProgressionStream(megaClient.Download(new Uri(contentLinks[curLink])), PrintProgression)) {
+                                megaStream.CopyTo(fileStream);
                             }
-                        } catch(WebException e) {
-                            MessageBox.Show(@"
-Can't reach download source. 
-Maybe it is unavailable now or your antivirus blocks the connection. 
-If it won't help, email to 'gleb.noxcaos@gmail.com' with following message: " + e.Message, "Ooops!");
-                        } catch(IOException) {
-                            TryNextLink();
-                        }
-
+                        } catch (Exception) { TryNextLink(); }
                     } else {
                         try {
                             webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(UpdateProgressBar);
                             webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadDataCompleted);
                             webClient.DownloadFileAsync(new Uri(contentLinks[curLink]), gamePath + ZIP_NAME);
-                        } catch (SocketException) {
-                            TryNextLink();
-                        }
+                        } catch (SocketException) { TryNextLink(); }
                     }
                 } catch (IOException e) {
-                    MessageBox.Show("The following error happened while download: " + e.Message, "Error");
+                    MessageBox.Show("The following error happened while download: " + e.Message
+                        + "Try moving launcher to 'C:\\Program Files'. Also check if firewall doesn't block access to internet", "Error");
                 }
             } else {
                 if (File.Exists(gamePath + ZIP_NAME)) {
@@ -322,10 +319,11 @@ If it won't help, email to 'gleb.noxcaos@gmail.com' with following message: " + 
                         RedownloadButton.IsEnabled = true;
                         PlayButton.IsEnabled = false;
                     }));
-                    MessageBox.Show("Seems like server has damaged files. We already working at it! Please, try downloading again in an hour", "Error");
+                    MessageBox.Show("Seems like server has damaged files. Please report the error to gleb.noxcaos@gmail.com", "Error");
                 } else {
                     SetServerUnavailableStatus("Can't reach download source");
-                    MessageBox.Show("Can't reach download source. Maybe it is unavailable now or your antivirus blocks the connection", "Ooops!");
+                    MessageBox.Show("Can't reach download source. Maybe it is unavailable now or your antivirus blocks the connection. "
+                        +"Try moving launcher to 'C\\Program Files' it may fix the access problems", "Ooops!");
                 }
             }
         }
@@ -382,7 +380,7 @@ If it won't help, email to 'gleb.noxcaos@gmail.com' with following message: " + 
                     RedownloadButton.IsEnabled = true;
                     PlayButton.IsEnabled = false;
                 }));
-                MessageBox.Show("Seems like server has damaged files. We already working at it! Please, try downloading again in an hour", "Error");
+                MessageBox.Show("Seems like server has damaged files. Please, report error to gleb.noxcaos@gmail.com", "Error");
             }
         }
 
