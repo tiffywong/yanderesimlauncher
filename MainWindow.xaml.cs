@@ -20,9 +20,11 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
 using Mega = CG.Web.MegaApiClient;
 
 namespace YandereSimLauncher {
@@ -36,7 +38,7 @@ namespace YandereSimLauncher {
         //private const string URLS_LINK =    "http://localhost:3000/urls.txt";
         private const string NEWS_URL = "https://public-api.wordpress.com/rest/v1.1/sites/yanderedev.wordpress.com/posts/";
         private const string ZIP_NAME = "content.zip";
-        private const int VERSION = 4;
+        private const int VERSION = 5;
 
         private enum GameStatus { Updated, Outdated, NotDownloaded, ContentError }
 
@@ -74,6 +76,7 @@ namespace YandereSimLauncher {
         private bool isLinkUpdated;
         private FileStream fileStream;
         private ProgressionStream megaStream;
+        private Action messageCloseCallback;
 
         //private List<Post> posts;
 
@@ -92,15 +95,16 @@ namespace YandereSimLauncher {
                     writer.WriteLine("---------------------------------------\n");
                 }
 
-                MessageBox.Show("Please report a bug on 'gleb.noxcaos@gmail.com' and attach 'launcherCrashDump.txt' that is next to this executable", "Fatal error");
+                MessageBox.Show(@"Please report a bug on 'gleb.noxcaos@gmail.com' and attach 'launcherCrashDump.txt' that appeared near launcher.
+                    This is THE ONLY ONE address, that accepts launcher errors. 
+                    Please, don't send reports directly to Yanderedev.", 
+                    "Fatal error");
                 var box = MessageBox.Show("Do you want to try in-browser download? Launcher will open a download page for you", "Hey", MessageBoxButton.YesNo);
 
-                if(box == MessageBoxResult.Yes && contentLinks != null && contentLinks.Count > 0)
+                if (box == MessageBoxResult.Yes && contentLinks != null && contentLinks.Count > 0)
                     Process.Start(contentLinks[0]);
 
                 Process.Start(AppDomain.CurrentDomain.BaseDirectory);
-                //Process.Start("mailto:gleb.noxcaos@gmail.com");
-
                 Application.Current.Shutdown();
             };
             
@@ -111,9 +115,40 @@ namespace YandereSimLauncher {
             megaClient.LoginAnonymous();
         }
 
+        private void ShowMessage(string body, string title, Action clb = null) {
+            Dispatcher.Invoke(new Action(() => {
+                MessageHeader.Text = title;
+                MessageBody.Text = body;
+                messageCloseCallback = clb;
+
+                var e = (BlurEffect)MainGrid.Effect;
+                e.Radius = 15;
+                MessageGrid.Visibility = Visibility.Visible;
+            }));            
+        }
+
         #region Events
         private void WindowMouseDown(object sender, MouseButtonEventArgs e) {
             try { DragMove(); } catch { }
+        }
+
+        private void OnMessageOKClick(object sender, RoutedEventArgs e) {
+            ((BlurEffect)MainGrid.Effect).Radius = 0;
+            MessageGrid.Visibility = Visibility.Collapsed;
+            if (messageCloseCallback != null) messageCloseCallback();
+            messageCloseCallback = null;
+        }
+
+        private void OnBugReportClick(object sender, RoutedEventArgs e) {
+            var message = "To report a bug: \n"
+                + " 1. Please describe what exactly happens, what doesn't work. \n"
+                + " 2. Please describe the steps that should be taken to reproduce the issue \n"
+                + " 3. It would be better to attach screenshot of launcher, when it stops working. \n";
+
+            ShowMessage(message, "Send a bug report");
+            MessageBody.Inlines.Add(new Bold(new Run("Submit your report to gleb.noxcaos@gmail.com \n")));
+            MessageBody.Inlines.Add(
+                "This is THE ONLY ONE address, that accepts launcher errors. Please, don't send reports directly to Yanderedev.");
         }
 
         private void OnCloseClick(object sender, MouseButtonEventArgs e) {
@@ -121,6 +156,8 @@ namespace YandereSimLauncher {
                 launcherThread.Abort();
                 isAppClosed = true;
                 megaClient.Logout();
+                if (megaStream != null) megaStream.Close();
+                if (fileStream != null) fileStream.Close();
             } catch { }
 
             Application.Current.Shutdown();
@@ -140,6 +177,8 @@ namespace YandereSimLauncher {
                 Process.Start(gamePath + "YandereSimulator.exe");
                 launcherThread.Abort();
                 isAppClosed = true;
+                if (megaStream != null) megaStream.Close();
+                if (fileStream != null) fileStream.Close();
                 Application.Current.Shutdown();
             } catch (Win32Exception) { ReportStatus("Can't launch the game"); }
         }
@@ -278,8 +317,12 @@ namespace YandereSimLauncher {
                 if (executable.Any()) File.Delete(executable.ElementAt(0));
                 if (content.Any()) DeleteDirectory(content.ElementAt(0));
             } catch (IOException) {
-                MessageBox.Show("Looks like you're running Yandere Simulator. Please close the game and try again.", "Ooops!");
-                Dispatcher.Invoke(new Action(() => { Application.Current.Shutdown(); }));
+                ShowMessage("Looks like you're running Yandere Simulator. Please close the game and try again.", "Ooops!",
+                    delegate {
+                        if (megaStream != null) megaStream.Close();
+                        if (fileStream != null) fileStream.Close();
+                        Application.Current.Shutdown();
+                    });
             }
         }
 
@@ -288,8 +331,12 @@ namespace YandereSimLauncher {
                 ReportStatus("Starting download");
 
                 try { if (File.Exists(gamePath + ZIP_NAME)) File.Delete(gamePath + ZIP_NAME); } catch {
-                    MessageBox.Show("Internal error happened. Launcher needs to be restarted", "Ooops!");
-                    Dispatcher.Invoke(new Action(() => { Application.Current.Shutdown(); }));
+                    ShowMessage("Internal error happened. Launcher needs to be restarted", "Ooops!", 
+                        delegate {
+                            if (megaStream != null) megaStream.Close();
+                            if (fileStream != null) fileStream.Close();
+                            Application.Current.Shutdown();
+                        });
                 }
 
                 try {
@@ -310,7 +357,7 @@ namespace YandereSimLauncher {
                         } catch (SocketException) { TryNextLink(); }
                     }
                 } catch (IOException e) {
-                    MessageBox.Show("The following error happened while download: " + e.Message
+                    ShowMessage("The following error happened while download: " + e.Message
                         + "Try moving launcher to 'C:\\Program Files'. Also check if firewall doesn't block access to internet", "Error");
                 }
             } else {
@@ -319,11 +366,11 @@ namespace YandereSimLauncher {
                         RedownloadButton.IsEnabled = true;
                         PlayButton.IsEnabled = false;
                     }));
-                    MessageBox.Show("Seems like server has damaged files. Please report the error to gleb.noxcaos@gmail.com", "Error");
+                    ShowMessage("Try moving launcher to 'C:\\Program Files'. Also check if firewall doesn't block access to internet", "Invalid permissions");
                 } else {
                     SetServerUnavailableStatus("Can't reach download source");
-                    MessageBox.Show("Can't reach download source. Maybe it is unavailable now or your antivirus blocks the connection. "
-                        +"Try moving launcher to 'C\\Program Files' it may fix the access problems", "Ooops!");
+                    ShowMessage("Can't reach download source. Maybe it is unavailable now or your antivirus blocks the connection. "
+                        +"Try moving launcher to 'C:\\Program Files' it may fix the access problems", "Ooops!");
                 }
             }
         }
@@ -380,7 +427,7 @@ namespace YandereSimLauncher {
                     RedownloadButton.IsEnabled = true;
                     PlayButton.IsEnabled = false;
                 }));
-                MessageBox.Show("Seems like server has damaged files. Please, report error to gleb.noxcaos@gmail.com", "Error");
+                ShowMessage("Try moving launcher to 'C:\\Program Files'. Also check if firewall doesn't block access to internet", "Invalid permissions");
             }
         }
 
@@ -453,11 +500,13 @@ namespace YandereSimLauncher {
                 GetData(BASE_LINK);
                 if (!isLinkUpdated) UpdateLinks();
                 if (!IsLauncherUpdated()) {
-                    MessageBox.Show("This launcher is now obsolete. A new launcher is now available. Please download the new launcher from the official website!", "Outdated version");
-                    Process.Start(Links[LinkType.newlauncher]);
-                    Dispatcher.Invoke(new Action(() => {
-                        Application.Current.Shutdown();
-                    }));
+                    ShowMessage("This launcher is now obsolete. A new launcher is now available. Please download the new launcher from the official website!", "Outdated version",
+                        delegate {
+                            Process.Start(Links[LinkType.newlauncher]);
+                            if (megaStream != null) megaStream.Close();
+                            if (fileStream != null) fileStream.Close();
+                            Application.Current.Shutdown();
+                        });
                     return;
                 }
 
@@ -478,14 +527,14 @@ namespace YandereSimLauncher {
                         RedownloadButton.IsEnabled = true;
                         PlayButton.IsEnabled = false;
                     }));
-                    MessageBox.Show("Seems like server has damaged files. We already working at it! Please, try downloading again in an hour", "Error");
+                    ShowMessage("Try moving launcher to 'C:\\Program Files'. Also check if firewall doesn't block access to internet", "Invalid permissions");
                 } else {
                     SetServerUnavailableStatus("Can't connect to update server");
-                    MessageBox.Show("Can't connect. Looks like your antivirus blocks the connection. Please add the app to exclusions or turn the antivirus off", "Ooops!");
+                    ShowMessage("Can't connect. Looks like your antivirus blocks the connection. Please add the app to exclusions or turn the antivirus off", "Ooops!");
                 }
             } catch(Exception) {
                 SetServerUnavailableStatus("Can't connect to update server");
-                MessageBox.Show("The connection is blocked. Try moving launcher to C:\\ProgramFiles folder and try again", "Ooops!");
+                ShowMessage("The connection is blocked. Try moving launcher to C:\\ProgramFiles folder and try again", "Ooops!");
             }
         }
 
@@ -553,9 +602,6 @@ namespace YandereSimLauncher {
 
             launcherThread = new Thread(StartCheckingInternetConnection);
             launcherThread.Start();
-
-            //Test
-            //throw new OutOfMemoryException();
         }
     }
 }

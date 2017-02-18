@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace YandereSimLauncher {
     public class ProgressionStream : Stream {
@@ -6,6 +7,8 @@ namespace YandereSimLauncher {
 
         private Stream _sourceStream;
         private ProgressionHandler _progressionHandler;
+
+        private bool isClosed;
 
         public ProgressionStream(Stream sourceStream, ProgressionHandler progressionHandler) {
             this._sourceStream = sourceStream;
@@ -15,7 +18,19 @@ namespace YandereSimLauncher {
         public override int Read(byte[] array, int offset, int count) {
             this._progressionHandler(this.Position / (double)this.Length * 100);
 
+            if (isClosed) _sourceStream.Dispose();
+
             return this._sourceStream.Read(array, offset, count);
+        }
+
+        public override void Close() {
+            _sourceStream.Close();
+            isClosed = true;
+            base.Close();
+        }
+
+        protected override void Dispose(bool disposing) {
+            _sourceStream.Dispose();
         }
 
         public override bool CanRead {

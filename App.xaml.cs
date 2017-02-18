@@ -9,6 +9,10 @@ namespace YandereSimLauncher {
     /// </summary>
     public partial class App : Application {
 
+        public App() {
+            ShutdownMode = ShutdownMode.OnLastWindowClose;
+        }
+
         /// <summary>
         /// Forces app to run single-instance
         /// </summary>
