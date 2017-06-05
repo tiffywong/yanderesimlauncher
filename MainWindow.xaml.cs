@@ -38,7 +38,7 @@ namespace YandereSimLauncher {
         //private const string URLS_LINK =    "http://localhost:3000/urls.txt";
         private const string NEWS_URL = "https://public-api.wordpress.com/rest/v1.1/sites/yanderedev.wordpress.com/posts/";
         private const string ZIP_NAME = "content.zip";
-        private const int VERSION = 5;
+        private const int VERSION = 6;
 
         private enum GameStatus { Updated, Outdated, NotDownloaded, ContentError }
 
@@ -69,7 +69,7 @@ namespace YandereSimLauncher {
         private WebClient webClient;
         private Mega.MegaApiClient megaClient;
         private string gamePath;
-        private int newGameVersion;
+        private long newGameVersion;
         private int curLink;
         private Thread launcherThread;
         private bool isAppClosed;
@@ -140,15 +140,15 @@ namespace YandereSimLauncher {
         }
 
         private void OnBugReportClick(object sender, RoutedEventArgs e) {
-            var message = "To report a bug: \n"
-                + " 1. Please describe what exactly happens, what doesn't work. \n"
-                + " 2. Please describe the steps that should be taken to reproduce the issue \n"
-                + " 3. It would be better to attach screenshot of launcher, when it stops working. \n";
+            var message = "To report a bug: \n\n"
+                + " 1. Describe exactly what happens and what isn't working properly. \n"
+                + " 2. Describe the steps that should be taken to reproduce the issue. \n"
+                + " 3. If possible, provide a screenshot of the problem. \n\n";
 
-            ShowMessage(message, "Send a bug report");
+            ShowMessage(message, "Bug Reporting");
             MessageBody.Inlines.Add(new Bold(new Run("Submit your report to gleb.noxcaos@gmail.com \n")));
             MessageBody.Inlines.Add(
-                "This is THE ONLY ONE address, that accepts launcher errors. Please, don't send reports directly to Yanderedev.");
+                "That is the ONLY e-mail address that accepts bug reports about the launcher. Please do not report launcher bugs to YandereDev.");
         }
 
         private void OnCloseClick(object sender, MouseButtonEventArgs e) {
@@ -207,6 +207,10 @@ namespace YandereSimLauncher {
             } catch (ArgumentException) {
                 //The string is not convertable to enum
             }
+        }
+
+        private void OnGameBugReportClick(object sender, RoutedEventArgs e) {
+            Process.Start(BASE_LINK + "bug-reporting/");
         }
         #endregion
 
@@ -293,17 +297,21 @@ namespace YandereSimLauncher {
         private GameStatus GetGameStatus() {
             try {
                 var serverVersion = GetData(Links[LinkType.version]);
-                newGameVersion = int.Parse(serverVersion);
+                newGameVersion = long.Parse(serverVersion);
+            } catch (OverflowException) {
+                ReportStatus("System: Wrong version on server");
+            } catch (FormatException) {
+                ReportStatus("System: Wrong version on server");
             } catch {
-                ReportStatus("Server error. Can't check version");
+                ReportStatus("Error: Check your connection");
             }
 
             try {
                 var executable = Directory.EnumerateFiles(gamePath, "YandereSimulator.exe").ElementAt(0);
                 var content = Directory.EnumerateDirectories(gamePath, "YandereSimulator_Data").ElementAt(0);
                 var clientVersion = File.ReadAllText(content + "\\version");
-
-                if (newGameVersion > int.Parse(clientVersion))
+                
+                if (newGameVersion != long.Parse(clientVersion))
                     return GameStatus.Outdated;
                 else return GameStatus.Updated;
 

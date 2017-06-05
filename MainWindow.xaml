@@ -92,17 +92,22 @@
                     <DropShadowEffect Direction="280.5" Color="#FFE058B9" BlurRadius="15" Opacity="0.6" ShadowDepth="3"/>
                 </Button.Effect>
             </Button>
-            <Button x:Name="ReportBug_Button" Content="Report&#xA;a bug" HorizontalAlignment="Center" Height="48" Margin="678,57,10,0" VerticalAlignment="Top" Width="70" BorderBrush="{x:Null}" Background="#FFFFBDF5" FontSize="13.333" FontFamily="Segoe UI Semibold" Cursor="Hand" Foreground="#FF7F0D64" BorderThickness="2" Click="OnBugReportClick" ToolTip="">
+            <Button x:Name="ReportBug_Button" Content="Report Launcher Bug" HorizontalAlignment="Center" Height="38" Margin="605,57,10,0" VerticalAlignment="Top" Width="143" BorderBrush="{x:Null}" Background="#FFFFBDF5" FontSize="13.333" FontFamily="Segoe UI Semibold" Cursor="Hand" Foreground="#FF7F0D64" BorderThickness="2" Click="OnBugReportClick">
+                <Button.Effect>
+                    <DropShadowEffect Direction="280.5" Color="#FFE058B9" BlurRadius="15" Opacity="0.6" ShadowDepth="3"/>
+                </Button.Effect>
+            </Button>
+            <Button x:Name="ReportBug_Button_Copy" Content="Report Game Bug" HorizontalAlignment="Center" Height="38" Margin="605,105,10,0" VerticalAlignment="Top" Width="143" BorderBrush="{x:Null}" Background="#FFFFBDF5" FontSize="13.333" FontFamily="Segoe UI Semibold" Cursor="Hand" Foreground="#FF7F0D64" BorderThickness="2" Click="OnGameBugReportClick">
                 <Button.Effect>
                     <DropShadowEffect Direction="280.5" Color="#FFE058B9" BlurRadius="15" Opacity="0.6" ShadowDepth="3"/>
                 </Button.Effect>
             </Button>
         </Grid>
         <Grid x:Name="MessageGrid" Height="500" Width="758" Grid.ColumnSpan="2" Background="#4C000000" Margin="0.2,0" Visibility="Collapsed">
-            <Rectangle Fill="#7FFFFFFF" HorizontalAlignment="Center" Height="400" Margin="139,60,139,0" VerticalAlignment="Top" Width="480"/>
-            <TextBlock x:Name="MessageHeader" HorizontalAlignment="Left" Margin="150,70,0,0" TextWrapping="Wrap" Text="Message header" VerticalAlignment="Top" Height="45" Width="455" Foreground="#FF590946" TextAlignment="Center" FontSize="29.333"/>
-            <TextBlock x:Name="MessageBody" Margin="150,120,153,95" Background="{x:Null}" Foreground="Black" FontSize="18.667" TextWrapping="Wrap"/>
-            <Button x:Name="PlayButton_Copy" Content="OK" HorizontalAlignment="Center" Height="40" Margin="0,410,0,0" VerticalAlignment="Top" Width="75" BorderBrush="{x:Null}" Background="#FFFFBDF5" FontSize="18.667" FontFamily="Segoe UI Semibold" Cursor="Hand" Foreground="#FF7F0D64" BorderThickness="2" Click="OnMessageOKClick" ToolTip="Play Yandere Simulator"/>
+            <Rectangle Fill="#7FFFFFFF" HorizontalAlignment="Center" Height="435" Margin="0,55,0,0" VerticalAlignment="Top" Width="551"/>
+            <TextBlock x:Name="MessageHeader" HorizontalAlignment="Left" Margin="120,65,0,0" TextWrapping="Wrap" Text="Message header" VerticalAlignment="Top" Height="50" Width="520" Foreground="#FF590946" TextAlignment="Center" FontSize="29.333"/>
+            <TextBlock x:Name="MessageBody" Margin="120,120,118,75" Background="{x:Null}" Foreground="Black" FontSize="18.667" TextWrapping="Wrap"/>
+            <Button x:Name="PlayButton_Copy" Content="OK" HorizontalAlignment="Center" Height="40" Margin="0,440,0,0" VerticalAlignment="Top" Width="100" BorderBrush="{x:Null}" Background="#FFFFBDF5" FontSize="18.667" FontFamily="Segoe UI Semibold" Cursor="Hand" Foreground="#FF7F0D64" BorderThickness="2" Click="OnMessageOKClick"/>
         </Grid>
     </Grid>
 </Window>
